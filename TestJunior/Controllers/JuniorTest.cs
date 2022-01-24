@@ -94,7 +94,7 @@ namespace TestJunior.Controllers
         }
 
         [HttpGet("ProductDetail/{id}")]
-
+        //
         public IActionResult GetProductDetail(int id)
         {
             var Products = _ctx.Product
@@ -121,7 +121,8 @@ namespace TestJunior.Controllers
                             LastName=info.UserId==null ? info.LastName : info.User.LastName,
                             NumOfReplies=info.InfoRequestReplies.Count(),
                             LastDate=info.InfoRequestReplies.Max(ir=>ir.InsertedDate)
-                        }).OrderByDescending(info => info.LastDate)
+                        })
+                        .OrderByDescending(info => info.LastDate)
                     })
                     .Where(p => p.ProductId == id);
 

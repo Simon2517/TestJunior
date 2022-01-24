@@ -28,42 +28,48 @@ namespace TestJunior
 
             modelBuilder.Entity<Brand>(entity => {
             entity.Property(b => b.Id).ValueGeneratedOnAdd(); 
-            modelBuilder.Entity<Brand>()
-                .HasOne(b => b.Account)
-                .WithOne(a => a.Brand)
-                .HasForeignKey<Brand>(b => b.AccountId);
+
+                modelBuilder.Entity<Brand>()
+                    .HasOne(b => b.Account)
+                        .WithOne(a => a.Brand)
+                    .HasForeignKey<Brand>(b => b.AccountId);
             });
 
             modelBuilder.Entity<User>(entity => {
                 entity.Property(u => u.Id).ValueGeneratedOnAdd();
-                modelBuilder.Entity<User>()
-                .HasOne(a => a.Account)
-                .WithOne(u => u.User)
-                .HasForeignKey<User>(u => u.AccountId); 
+                  
+                  modelBuilder.Entity<User>()
+                    .HasOne(a => a.Account)
+                        .WithOne(u => u.User)
+                    .HasForeignKey<User>(u => u.AccountId); 
             });
 
             modelBuilder.Entity<Product>(entity => {
                 entity.Property(p => p.ProductId).ValueGeneratedOnAdd();
-                modelBuilder.Entity<Product>()
-                .HasOne(p=>p.Brand)
-                .WithMany(b => b.Products)
-                .HasForeignKey(p => p.BrandId);
+
+                    modelBuilder.Entity<Product>()
+                    .HasOne(p=>p.Brand)
+                        .WithMany(b => b.Products)
+                    .HasForeignKey(p => p.BrandId);
             });
 
             modelBuilder.Entity<InfoRequest>(entity => {
                 entity.Property(Ir => Ir.Id).ValueGeneratedOnAdd();
-                modelBuilder.Entity<InfoRequest>()
-                .HasOne(Ir => Ir.Product)
-                .WithMany(p => p.InfoRequests)
-                .HasForeignKey(Ir => Ir.ProductId);
-                modelBuilder.Entity<InfoRequest>()
-                .HasOne(Ir=>Ir.User)
-                .WithMany(u=>u.InfoRequests)
-                .HasForeignKey(u=>u.UserId);
-                modelBuilder.Entity<InfoRequest>()
-                .HasOne(Ir=>Ir.Nation)
-                .WithMany(n=>n.InfoRequests)
-                .HasForeignKey(Ir=>Ir.StateId);
+
+                    modelBuilder.Entity<InfoRequest>()
+                    .HasOne(Ir => Ir.Product)
+                        .WithMany(p => p.InfoRequests)
+                    .HasForeignKey(Ir => Ir.ProductId);
+
+                    modelBuilder.Entity<InfoRequest>()
+                    .HasOne(Ir=>Ir.User)
+                        .WithMany(u=>u.InfoRequests)
+                    .HasForeignKey(u=>u.UserId);
+
+                    modelBuilder.Entity<InfoRequest>()
+                    .HasOne(Ir=>Ir.Nation)
+                        .WithMany(n=>n.InfoRequests)
+                    .HasForeignKey(Ir=>Ir.StateId);
             });
 
             modelBuilder.Entity<InfoRequestReply>(entity => {
