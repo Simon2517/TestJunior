@@ -73,13 +73,13 @@ namespace TestJunior.Controllers
                             .Include(b => b.Products)
                                 .ThenInclude(p => p.ProdsCategories)
                                     .ThenInclude(pc => pc.Category)
-                            .Select(brand => new BrandDetail
+                            .Select(brand => new 
                             {
                                 Id = brand.Id,
                                 Name = brand.BrandName,
                                 NumOfProducts = brand.Products.Count(),
                                 NumOfInforequests = brand.Products.SelectMany(prods => prods.InfoRequests).Count(),
-                                ListOfProds = brand.Products.Select(prod => new PolishedProduct
+                                ListOfProds = brand.Products.Select(prod => new 
                                 {
                                     ProductId = prod.ProductId,
                                     ProductName = prod.Name,
@@ -137,6 +137,7 @@ namespace TestJunior.Controllers
                                 .Include(info=>info.InfoRequestReplies)
                                     .ThenInclude(reply=>reply.Account)
                                 .Include(info=>info.Nation)
+
                                 .Select(info=> new RequestDetail
                                 {
                                     Id=info.Id,
@@ -149,7 +150,8 @@ namespace TestJunior.Controllers
                                         ProductName=info.Product.Name,
                                         Brandname=info.Product.Brand.BrandName,
                                     },
-                                    Replies=info.InfoRequestReplies.OrderByDescending(info=>info.InsertedDate).Select(rep=>new APIReply
+                                    Replies=info.InfoRequestReplies.OrderByDescending(info=>info.InsertedDate)
+                                    .Select(rep=>new APIReply
                                     {
                                         Id=rep.Id,
                                         Name=rep.Account.AccountType==1?info.Product.Brand.BrandName:info.Name+" "+info.LastName,
@@ -166,33 +168,38 @@ namespace TestJunior.Controllers
         [HttpGet("Test/{id}")]
         public IActionResult Test(int id)
         {
-            var Brands2 = _ctx.Brand
+
+            var Categs = _ctx.ProductCategories
+                .Where(x => x.Product.BrandId == id)
+                .GroupBy(x => new { x.CategoryId, x.Category.Name })
+                .Select(y => new
+                {
+                    Id = y.Key.CategoryId,
+                    Name = y.Key.Name,
+                    count=y.Count()
+                });
+
+            var Brands = _ctx.Brand
                 .Include(b => b.Products)
                     .ThenInclude(p => p.ProdsCategories)
                         .ThenInclude(pc => pc.Category)
-                .Select(brand => new BrandDetail
+                .Select(brand => new
                 {
                     Id = brand.Id,
                     Name = brand.BrandName,
                     NumOfProducts = brand.Products.Count(),
                     NumOfInforequests = brand.Products.SelectMany(prods => prods.InfoRequests).Count(),
-                    ListOfProds = brand.Products.Select(prod => new PolishedProduct
+                    ListOfProds = brand.Products.Select(prod => new
                     {
                         ProductId = prod.ProductId,
                         ProductName = prod.Name,
                         NumOfInforequest = prod.InfoRequests.Count()
                     }),
-                    ListOfCategs = brand.Products.SelectMany(prod => prod.ProdsCategories
-                     .GroupBy(k => new {Id=k.CategoryId,Name=k.Category.Name })
-                     .Select(x=> new Category
-                     {
-                         Id=x.Key.Id,
-                         Name=x.Key.Name,
-                     }))
+                    ListOfCategs = Categs.ToList()
                 })
                 .Where(brand => brand.Id == id);
 
-            return Ok(Brands2);
+            return Ok(Brands);
         }
     }
 }
