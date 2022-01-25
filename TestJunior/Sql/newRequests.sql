@@ -18,21 +18,11 @@ CREATE PROCEDURE Pricing
 AS
 
 if @pagenumber<=0
-	begin
-		raiserror('Pagenumber must be higher than 0',1,1);
-		 
-	end
+	THROW 51000, 'Category must not be negative', 1;
+
 if @PageSize<=0
 	begin
 		raiserror('Pagesize must be higher than 0',1,1);
-	end
-if @Category<0
-	begin;
-		THROW 51000, 'Category must not be negative', 1;
-	end;
-if @order<0 or @order>3
-	begin
-		raiserror('Order must be a value between 1 and 3',1,1);
 	end
 	BEGIN
 	WITH ctepaging 
@@ -42,16 +32,16 @@ if @order<0 or @order>3
 											   case 
 													when @order=2 then -Price 
 													when @order=3 then  Price end) AS rownum 
-			 FROM Product where Product.ProductId in (select ProductId from ProductCategories where @Category=0 or CategoryId=@Category)) 
+			 FROM Product where Product.ProductId in (select ProductId from ProductCategories where @Category<=0 or CategoryId=@Category)) 
 
 		SELECT ctepaging.ProductId,ctepaging.Name,ctepaging.Price
 		FROM   ctepaging 
 		WHERE  rownum BETWEEN ( @PageNumber - 1 )*@PageSize + 1 AND @PageNumber * @PageSize
-	
+		order by rownum
 		
 END
 
-exec dbo.Pricing 1,10,@order=1,@Category=-2
+exec dbo.Pricing 1,10,@order=-2,@Category=2
 exec dbo.Pricing 1,10,5;
 
 

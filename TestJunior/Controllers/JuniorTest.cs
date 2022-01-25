@@ -68,12 +68,17 @@ namespace TestJunior.Controllers
             return Ok(PaginatedList<PolishedBrand>.Create(Brands, PageNumber, PageSize));
         }
 
+        /// <summary>
+        /// returns a Brand, taking as input an Id 
+        /// using an anonimous to generate the properties
+        /// </summary>
         [HttpGet("BrandDetail/{id}")]
         public IActionResult GetBrandDetail(int id)
         {
 
             if (id <= 0)
-                return Ok("invalid Id");
+                return BadRequest("invalid Id");
+
             var Categs= from prod in _ctx.Product
                         join prodCat in _ctx.ProductCategories on prod.ProductId equals prodCat.ProductId
                         join cat in _ctx.Category on prodCat.CategoryId equals cat.Id
