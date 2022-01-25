@@ -13,9 +13,9 @@ namespace TestJunior
         public int InfoRequestId { get; set; }
         public string ReplyText { get; set; }
         public DateTime InsertedDate { get; set; }
-        /// property that represents the foreign key betwen InfoRequest and InfoRequestReply
+        /// property that represents the foreign key between InfoRequest and InfoRequestReply
         public virtual InfoRequest InfoRequest { get; set; }
-        /// property that represents the foreign key betwen Account and InfoRequestReply
+        /// property that represents the foreign key between Account and InfoRequestReply
         public virtual Account Account { get; set; }
     }
 }
