@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace TestJunior
 {
+    /// <summary>
+    /// class that represent the InfoRequest table of the DataBase
+    /// </summary>
     public class InfoRequest
     {
         public int Id { get; set; }
@@ -19,9 +22,13 @@ namespace TestJunior
         public string RequestText { get; set; }
         public DateTime InsertedDate { get; set; }
 
+        /// property that represents the foreign key betwen Product and InfoRequest
         public virtual Product Product { get; set; }
+        /// property that represents the foreign key betwen Nation and InfoRequest
         public virtual Nation Nation { get; set; }
+        /// property that represents the foreign key betwen User and InfoRequest
         public virtual User User { get; set; }
+        /// property that represents the foreign key betwen InfoRequestReply and InfoRequest
         public virtual IEnumerable<InfoRequestReply> InfoRequestReplies { get; set; } = new List<InfoRequestReply>();
 
     }

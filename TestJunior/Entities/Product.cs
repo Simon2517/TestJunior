@@ -6,6 +6,9 @@ namespace TestJunior
 {
     public class Product
     {
+        /// <summary>
+        /// class that represent the Product table of the DataBase
+        /// </summary>
         public int ProductId { get; set; }
         public int BrandId { get; set; }
         public string Name { get; set; }
@@ -14,7 +17,9 @@ namespace TestJunior
         public string Description { get; set; }
 
         public virtual Brand Brand { get; set; }
+        /// property that represents the foreign key betwen ProductCategories and Product
         public virtual IEnumerable<ProductCategories> ProdsCategories { get; set; }=new List<ProductCategories>();
+        /// property that represents the foreign key betwen InfoRequests and Product
         public virtual IEnumerable<InfoRequest> InfoRequests { get; set; }= new List<InfoRequest>();
 
     }

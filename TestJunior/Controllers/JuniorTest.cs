@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-//using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -24,9 +23,15 @@ namespace TestJunior.Controllers
         }
 
         [HttpGet("Products/{PageNumber}/{PageSize}")]
-
+        /// <summary>
+        /// returns a pagineted list of products, taking as input PageNumber and PageSize 
+        /// and using a projection class for the product detail
+        /// </summary>
         public IActionResult GetAllProducts(int PageNumber, int PageSize)
         {
+            ///checks if PageNumber and PageSize are higher than 0
+            if(PageNumber <= 0 || PageSize <= 0)
+                throw new ArgumentOutOfRangeException();
             var Products = _ctx.Product
                     .Select(prod => new PolishedProduct
                     {
@@ -34,14 +39,21 @@ namespace TestJunior.Controllers
                         ProductName = prod.Name,
                         ShortDescription = prod.ShortDescription
                     });
-
+            ///creates a list of paginated Products, it also holds the value of the total numbers of products, page number and pagesize
             return Ok(PaginatedList<PolishedProduct>.Create(Products, PageNumber, PageSize));
         }
 
-        [HttpGet("Brands/{PageNumber}/{PageSize}")]
 
+        /// <summary>
+        /// returns a pagineted list of Brands, taking as input PageNumber and PageSize 
+        /// and using a projection class for the brand detail
+        /// </summary>
+        [HttpGet("Brands/{PageNumber}/{PageSize}")]
         public IActionResult GetAllBrand(int PageNumber, int PageSize)
         {
+            ///checks if PageNumber and PageSize are higher than 0
+            if (PageNumber <= 0 || PageSize <= 0)
+                throw new ArgumentOutOfRangeException();
             var Brands = _ctx.Brand
                     .Select(brand => new PolishedBrand
                     {
@@ -52,13 +64,16 @@ namespace TestJunior.Controllers
                         
                     });
 
-
+            ///creates a list of paginated Brands, it also holds the value of the total numbers of brands, page number and pagesize
             return Ok(PaginatedList<PolishedBrand>.Create(Brands, PageNumber, PageSize));
         }
 
         [HttpGet("BrandDetail/{id}")]
         public IActionResult GetBrandDetail(int id)
         {
+
+            if (id <= 0)
+                return Ok("invalid Id");
             var Categs= from prod in _ctx.Product
                         join prodCat in _ctx.ProductCategories on prod.ProductId equals prodCat.ProductId
                         join cat in _ctx.Category on prodCat.CategoryId equals cat.Id

@@ -2,6 +2,7 @@
 
 namespace TestJunior.DetailedEntities
 {
+
     public class APIReply
     {
         public int Id { get; set; }
