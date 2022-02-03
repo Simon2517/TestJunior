@@ -23,13 +23,13 @@ namespace TestJunior
         public DateTime InsertedDate { get; set; }
 
         /// property that represents the foreign key between Product and InfoRequest
-        public virtual Product Product { get; set; }
+        public  Product Product { get; set; }
         /// property that represents the foreign key between Nation and InfoRequest
-        public virtual Nation Nation { get; set; }
+        public  Nation Nation { get; set; }
         /// property that represents the foreign key between User and InfoRequest
-        public virtual User User { get; set; }
+        public  User User { get; set; }
         /// property that represents the foreign key between InfoRequestReply and InfoRequest
-        public virtual IEnumerable<InfoRequestReply> InfoRequestReplies { get; set; } = new List<InfoRequestReply>();
+        public  IEnumerable<InfoRequestReply> InfoRequestReplies { get; set; } = new List<InfoRequestReply>();
 
     }
 }

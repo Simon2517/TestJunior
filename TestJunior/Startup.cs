@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using TestJunior.Repository;
+using TestJunior.Services;
 
 namespace TestJunior
 {
@@ -28,12 +30,30 @@ namespace TestJunior
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    "MyPolicy", builder =>
+                    {
+                        builder
+                       .AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .AllowAnyOrigin();
+                    });
+            });
+
             services.AddControllers();
+            services.AddScoped<IRepository<Brand>, BrandRepository>();
+            services.AddScoped<IBrandServices, BrandServices>();
+            services.AddScoped<IRepository<Product>, ProductRepository>();
+            services.AddScoped<IProductServices, ProductServices>();
+            services.AddScoped<IRepository<InfoRequest>, InfoRequestRepository>();
             services.AddDbContextPool<DatabaseContext>(optionsBuilder => { 
                 string ConnectionString = Configuration.GetConnectionString("Default");
                 optionsBuilder.UseSqlServer(ConnectionString);
             });
-            
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +65,7 @@ namespace TestJunior
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("MyPolicy");
 
             app.UseRouting();
 

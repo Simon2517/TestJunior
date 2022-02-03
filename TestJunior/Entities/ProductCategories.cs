@@ -11,9 +11,9 @@ namespace TestJunior
         public int CategoryId { get; set; }
 
         /// property that represents the foreign key between Category and ProductCategories
-        public virtual Category Category { get; set; }
+        public  Category Category { get; set; }
         /// property that represents the foreign key between Product and ProductCategories
-        public virtual Product Product { get; set; }
+        public  Product Product { get; set; }
 
     }
 }

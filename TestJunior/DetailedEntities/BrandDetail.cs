@@ -10,6 +10,6 @@ namespace TestJunior.DetailedEntities
         public int NumOfProducts { get; set; }
         public int NumOfInforequests { get; set; }
         public IEnumerable<PolishedProduct> ListOfProds { get; set; } = new List<PolishedProduct>();
-        public IEnumerable<Category> ListOfCategs { get; set; }= new List<Category>();
+        public IEnumerable<APICategoryWithNumOfProds> ListOfCategs { get; set; }= new List<APICategoryWithNumOfProds>();
     }
 }

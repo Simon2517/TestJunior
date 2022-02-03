@@ -16,11 +16,11 @@ namespace TestJunior
         public decimal Price { get; set; }
         public string Description { get; set; }
 
-        public virtual Brand Brand { get; set; }
+        public Brand Brand { get; set; }
         /// property that represents the foreign key between ProductCategories and Product
-        public virtual IEnumerable<ProductCategories> ProdsCategories { get; set; }=new List<ProductCategories>();
+        public IEnumerable<ProductCategories> ProdsCategories { get; set; }=new List<ProductCategories>();
         /// property that represents the foreign key between InfoRequests and Product
-        public virtual IEnumerable<InfoRequest> InfoRequests { get; set; }= new List<InfoRequest>();
+        public IEnumerable<InfoRequest> InfoRequests { get; set; }= new List<InfoRequest>();
 
     }
 }

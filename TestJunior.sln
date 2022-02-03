@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestJunior", "TestJunior\TestJunior.csproj", "{CA117E8C-8D0C-43B8-94C5-857BD4547BD1}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "vuebackoffice", "VueBackOffice\vuebackoffice.esproj", "{940FA9AB-D1F9-4894-A292-0D4C28B5E3F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,8 +15,14 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CA117E8C-8D0C-43B8-94C5-857BD4547BD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CA117E8C-8D0C-43B8-94C5-857BD4547BD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA117E8C-8D0C-43B8-94C5-857BD4547BD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA117E8C-8D0C-43B8-94C5-857BD4547BD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA117E8C-8D0C-43B8-94C5-857BD4547BD1}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA117E8C-8D0C-43B8-94C5-857BD4547BD1}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{940FA9AB-D1F9-4894-A292-0D4C28B5E3F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{940FA9AB-D1F9-4894-A292-0D4C28B5E3F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{940FA9AB-D1F9-4894-A292-0D4C28B5E3F1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{940FA9AB-D1F9-4894-A292-0D4C28B5E3F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{940FA9AB-D1F9-4894-A292-0D4C28B5E3F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{940FA9AB-D1F9-4894-A292-0D4C28B5E3F1}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

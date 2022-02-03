@@ -18,13 +18,15 @@ namespace TestJunior
         public int PageNumber { get; private set; }
         public int PageSize { get; private set; }
         public int TotalCount { get; set; }
+        public decimal TotalPages { get; set; }
         public List<T> ListOfElements { get; set;}
 
-        public PaginatedList(List<T> items, int count, int pageNumber, int pageSize)
+        public PaginatedList(List<T> items, int count, int pageNumber, int pageSize, decimal maxPages)
         {
             PageNumber = pageNumber;
             PageSize = pageSize;
             TotalCount = count;
+            TotalPages = maxPages;
             ListOfElements=items;
         }
         /// <summary>
@@ -37,8 +39,10 @@ namespace TestJunior
         public static PaginatedList<T> Create(IQueryable<T> source, int pageNumber, int pageSize)
         {
             var count = source.Count();
+            var maxPages=decimal.Round(count/pageSize);
             var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-            return new PaginatedList<T>(items, count, pageNumber, pageSize);
+            return new PaginatedList<T>(items, count, pageNumber, pageSize,maxPages);
         }
+
     }
 }

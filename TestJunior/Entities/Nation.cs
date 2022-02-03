@@ -11,6 +11,6 @@ namespace TestJunior
         public int Id { get; set; }
         public string Name { get; set; }
         /// property that represents the foreign key between Nation and Inforequest
-        public virtual IEnumerable<InfoRequest> InfoRequests { get; set; }=new List<InfoRequest>();
+        public  IEnumerable<InfoRequest> InfoRequests { get; set; }=new List<InfoRequest>();
     }
 }

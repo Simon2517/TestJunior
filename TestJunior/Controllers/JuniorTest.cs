@@ -22,11 +22,11 @@ namespace TestJunior.Controllers
             _ctx = ctx;
         }
 
-        [HttpGet("Products/{PageNumber}/{PageSize}")]
         /// <summary>
-        /// returns a pagineted list of products, taking as input PageNumber and PageSize 
+        /// returns a paginated list of products, taking as input PageNumber and PageSize 
         /// and using a projection class for the product detail
         /// </summary>
+        [HttpGet("Products/{PageNumber}/{PageSize}")]
         public IActionResult GetAllProducts(int PageNumber, int PageSize)
         {
             ///checks if PageNumber and PageSize are higher than 0
@@ -45,7 +45,7 @@ namespace TestJunior.Controllers
 
 
         /// <summary>
-        /// returns a pagineted list of Brands, taking as input PageNumber and PageSize 
+        /// returns a paginated list of Brands, taking as input PageNumber and PageSize 
         /// and using a projection class for the brand detail
         /// </summary>
         [HttpGet("Brands/{PageNumber}/{PageSize}")]
@@ -78,7 +78,7 @@ namespace TestJunior.Controllers
             if (id <= 0)
                 return BadRequest("invalid Id");
             if (_ctx.Brand.FirstOrDefault(x => x.Id == id)==null)
-                return BadRequest("Id not in table");
+                return NotFound("Id not in table");
             else { 
             ///linq query to get the categories associated with the Brand and the number of products per category
                 var Categs= from prod in _ctx.Product
@@ -126,7 +126,7 @@ namespace TestJunior.Controllers
             if (id <= 0)
                 return BadRequest("invalid Id");
             if (_ctx.Brand.FirstOrDefault(x => x.Id == id) == null)
-                return BadRequest("Id not in table");
+                return NotFound ("Id not in table");
             else
             {
                 var Products = _ctx.Product

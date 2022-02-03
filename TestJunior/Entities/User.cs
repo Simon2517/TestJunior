@@ -13,7 +13,7 @@ namespace TestJunior
         public string Name { get; set; }
         public string LastName { get; set; }
         /// property that represents the foreign key between User and Account
-        public virtual Account Account { get; set; }
+        public  Account Account { get; set; }
         /// property that represents the foreign key between User and InfoRequest
         public IEnumerable<InfoRequest>InfoRequests { get; set; }=new List<InfoRequest>();
     }

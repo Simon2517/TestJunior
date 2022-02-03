@@ -13,9 +13,9 @@ namespace TestJunior
         public string BrandName { get;  set; }
         public string Description { get;  set; }
         /// property that represents the foreign key between Account and Brand
-        public virtual Account Account { get;  set; }
+        public  Account Account { get;  set; }
         /// property that represents the foreign key between Products and Brand
-        public virtual IEnumerable<Product> Products { get; private set; }=new List<Product>();
+        public  IEnumerable<Product> Products { get; private set; }=new List<Product>();
 
 
     }
