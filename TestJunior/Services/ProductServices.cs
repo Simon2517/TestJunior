@@ -11,25 +11,57 @@ namespace TestJunior.Services
         {
             _Productrepo = _productrepo;
         }
-        public PaginatedList<PaginatedProduct> ListOfProducts(int pagenumber, int pagesize/*,int order*/)
+
+        public IQueryable<Product> OrderedProducts(int order=0,bool asc_desc=true)
+        {
+            var prods= _Productrepo.GetAll();
+            switch (order)
+            {
+                case 1:
+                    if (asc_desc)
+                        return prods.OrderBy(x => x.Brand.BrandName);
+                    else
+                        return prods.OrderByDescending(x => x.Brand.BrandName);
+                case 2:
+                    if (asc_desc)
+                        return prods.OrderBy(x => x.Name);
+                    else
+                        return prods.OrderByDescending(x => x.Name);
+                case 3:
+                    if (asc_desc)
+                        return prods.OrderBy(x => x.Price);
+                    else
+                        return prods.OrderByDescending(x => x.Price);
+                default:
+                    if (asc_desc)
+                        return prods.OrderBy(x => x.Brand.BrandName).ThenBy(x=> x.Name);
+                    else
+                        return prods.OrderByDescending(x => x.Brand.BrandName).ThenBy(x => x.Name);
+
+            }
+
+        }
+        public PaginatedList<PaginatedProduct> ListOfProducts(int pagenumber, int pagesize,int order,bool asc_desc)
         {
             if (pagenumber <= 0 || pagesize <= 0)
                 return null;
                 
-                IQueryable<PaginatedProduct> Prods = _Productrepo.GetAll()
+                IQueryable<PaginatedProduct> Prods = OrderedProducts(order,asc_desc)
                     .Select(prod => new PaginatedProduct
                     {
                         Id=prod.ProductId,
                         Name = prod.Name,
+                        BrandName=prod.Brand.BrandName,
                         ShortDescription = prod.ShortDescription,
+                        Price = prod.Price,
+                        Categories=prod.ProdsCategories.Select(pc=>pc.Category.Name)
                     });
             return PaginatedList<PaginatedProduct>.Create(Prods, pagenumber, pagesize);
         }
 
-
         public IQueryable<APIProductDetail> ProductDetail(int id)
         {
-            var Products = _Productrepo.GetAll()
+            var Product = _Productrepo.GetAll()
                 .Select(prod => new APIProductDetail
                 {
                     ProductId = prod.ProductId,
@@ -54,7 +86,7 @@ namespace TestJunior.Services
                 })
                 .Where(p => p.ProductId == id);
 
-            return Products;
+            return Product;
 
         }
     }

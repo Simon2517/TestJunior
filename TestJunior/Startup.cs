@@ -48,7 +48,8 @@ namespace TestJunior
             services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<IRepository<InfoRequest>, InfoRequestRepository>();
-            services.AddDbContextPool<DatabaseContext>(optionsBuilder => { 
+            services.AddScoped<IRequestServices, RequestServices>();
+            services.AddDbContextPool<DatabaseContext>(optionsBuilder => {
                 string ConnectionString = Configuration.GetConnectionString("Default");
                 optionsBuilder.UseSqlServer(ConnectionString);
             });

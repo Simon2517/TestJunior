@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TestJunior;
 
 namespace TestJunior
 {
@@ -33,16 +34,18 @@ namespace TestJunior
         /// method used to create a paginated list of generic objects taken from an IQueryable
         /// </summary>
         /// <param name="source">the IQueryable from where the objects come from</param>
-        /// <param name="pageNumber"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="pagenumber"></param>
+        /// <param name="pagesize"></param>
         /// <returns></returns>
-        public static PaginatedList<T> Create(IQueryable<T> source, int pageNumber, int pageSize)
+        public static PaginatedList<T> Create(IQueryable<T> source, int pagenumber, int pagesize)
         {
             var count = source.Count();
-            var maxPages=decimal.Round(count/pageSize);
-            var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-            return new PaginatedList<T>(items, count, pageNumber, pageSize,maxPages);
+            var maxPages=(int)decimal.Ceiling(count/ pagesize);
+            var items = source.Skip((pagenumber - 1) * pagesize).Take(pagesize).ToList();
+            return new PaginatedList<T>(items, count, pagenumber, pagesize, maxPages);
         }
+
+        
 
     }
 }

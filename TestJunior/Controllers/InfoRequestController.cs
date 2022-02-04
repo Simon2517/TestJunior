@@ -8,13 +8,13 @@ namespace TestJunior.Controllers
 {
         [ApiController]
         [Route("[controller]")] 
-    public class ProductController : ControllerBase
+    public class InfoRequestController : ControllerBase
     {
 
-        private readonly IProductServices _productServices;
-        public ProductController(IProductServices productServices)
+        private readonly IRequestServices _inforequestServices;
+        public InfoRequestController(IRequestServices inforequestServices)
         {
-            _productServices = productServices;
+            _inforequestServices = inforequestServices;
         }
 
         /// <summary>
@@ -25,15 +25,15 @@ namespace TestJunior.Controllers
         /// <returns>
         /// A Bad request if either pagenumber or pagesize are 0 or below
         /// A paginated list of Brands if the input parameters are valid</returns>
-        [HttpGet("products/{pagenumber}/{pagesize}/{order}/{asc_desc}")]
-        public IActionResult GetAllPaginatedProducts(int pagenumber=1, int pagesize=10,int order=0,bool asc_desc=true)
+        [HttpGet("requests/{pagenumber}/{pagesize}/{order}/{asc_desc}")]
+        public IActionResult GetAllPaginatedRequests(int pagenumber=1, int pagesize=10,bool asc_desc=true)
         {
 
             if (pagenumber <= 0)
                 return BadRequest("pagenumber is 0 or negative");
             if(pagesize <= 0)
                 return BadRequest("pagesize is 0 or negative");
-            return Ok(_productServices.ListOfProducts(pagenumber, pagesize,order,asc_desc));
+            return Ok(_inforequestServices.ListOfRequest(pagenumber, pagesize, asc_desc));
 
         }
 
@@ -47,12 +47,12 @@ namespace TestJunior.Controllers
         /// A brand with its details if the id is valid
         /// </returns>
         [HttpGet("detail/{id}")]
-        public IActionResult GetProductDetail(int id)
+        public IActionResult GetRequestDetail(int id)
         {
             if (id <= 0)
                 return BadRequest("Id can't be 0 or negative");
 
-            return Ok(_productServices.ProductDetail(id).FirstOrDefault());
+            return Ok(_inforequestServices.RequestDetail(id).FirstOrDefault());
         }
 
     }

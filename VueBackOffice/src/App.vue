@@ -1,19 +1,27 @@
 <template>
-  <div id="app" >  
-    <div class="container-fluid m-0 p-0">
-      <Home />
-      </div>  
-    
+  <div id="app">
+    <div class="container-fluid">
+      <div class="row bg-dark text-white text-start shadow">
+        <div class="col">
+          <h3>Company Name</h3>
+        </div>
+      </div>
+
+      
+      <div class="row">
+        <div class="col"><SideBar /></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import Home from "./components/Home.vue";
+import SideBar from "./components/SideBar.vue";
 
 export default {
   name: "App",
   components: {
-    Home,
+    SideBar,
   },
 };
 </script>

@@ -1,0 +1,80 @@
+<template>
+  <div v-if="info !== null">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Nome Brand</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in info.listOfElements" :key="index">
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ul class="pagination d-flex justify-content-center">
+      <li class="page-item" :class="this.pageNumber === 1 ? 'disabled' : ''">
+        <a class="page-link" @click="previous()">Previous</a>
+      </li>
+      <li class="page-item" v-for="index in info.totalPages" :key="index"
+      :class="pageNumber===index ?'active':''">
+            <a class="page-link" v-if="((index<=pageNumber+2)&&(index>=pageNumber))||index===info.totalPages" @click="selectedIndex(index)">{{index}}</a>
+      </li>
+      <li
+        class="page-item"
+        :class="this.pageNumber === this.info.totalPages ? 'disabled' : ''"
+      >
+        <a class="page-link" @click="next()">Next</a>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+import brandServices from "../services/brandServices";
+export default {
+  data() {
+    return {
+      info: null,
+      pageNumber: 1,
+      pageSize: 10,
+      orderProperty: 0,
+      asc: true,
+    };
+  },
+  methods: {
+    async load() {
+      this.info = await brandServices.getBrands(
+        this.pageNumber,
+        this.pageSize,
+        this.orderProperty,
+        this.asc
+      );
+    },
+    async next() {
+      if (this.pageNumber < this.info.totalPages) this.pageNumber++;
+      await this.load();
+    },
+    async previous() {
+      if (this.pageNumber > 1) this.pageNumber--;
+      await this.load();
+    },
+    async selectedIndex(index){
+        this.pageNumber=index
+        await this.load()
+    }
+  },
+  async created() {
+    await this.load();
+  },
+};
+</script>
+
+<style scoped>
+a{
+    cursor: pointer;
+}
+</style>

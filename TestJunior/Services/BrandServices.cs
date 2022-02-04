@@ -13,14 +13,14 @@ namespace TestJunior.Services
             _Brandrepo = brandrepo;
             _Productrepo = _productrepo;
         }
-        public PaginatedList<PaginatedBrand> ListOfBrands(int pagenumber, int pagesize/*,int order*/)
+        public PaginatedList<PaginatedBrand> ListOfBrands(int pagenumber, int pagesize, int order, bool asc_desc)
         {
             if (pagenumber <= 0 || pagesize <= 0)
                 return null;
-            IQueryable<PaginatedBrand> Brands = _Brandrepo.GetAll()
+            IQueryable<PaginatedBrand> Brands = OrderedBrands(order,asc_desc)
                     .Select(brand => new PaginatedBrand
                     {
-
+                        Id = brand.Id,
                         Name = brand.BrandName,
                         Description = brand.Description,
                         ProductIds = brand.Products.Select(ids => ids.ProductId)
@@ -61,5 +61,24 @@ namespace TestJunior.Services
                     .Where(brand => brand.Id == id);
             return Brands;
             }
+
+        public IQueryable<Brand> OrderedBrands(int order, bool asc_desc)
+        {
+            var prods = _Brandrepo.GetAll();
+            switch (order)
+            {
+                case 1:
+                    if (asc_desc)
+                        return prods.OrderBy(x => x.BrandName);
+                    else
+                        return prods.OrderByDescending(x => x.BrandName);
+                default:
+                    if (asc_desc)
+                        return prods.OrderBy(x => x.Id);
+                    else
+                        return prods.OrderByDescending(x => x.Id);
+
+            }
+        }
     }
 }

@@ -26,15 +26,15 @@ namespace TestJunior.Controllers
         /// <returns>
         /// A Bad request if either pagenumber or pagesize are 0 or below
         /// A paginated list of Brands if the input parameters are valid</returns>
-        [HttpGet("brands/{pagenumber?}/{pagesize?}")]
-        public IActionResult GetAllPAginatedBrands(int pagenumber=1, int pagesize=10)
+        [HttpGet("brands/{pagenumber}/{pagesize}/{order}/{asc_desc}")]
+        public IActionResult GetAllPAginatedBrands(int pagenumber=1, int pagesize=10,int order=0,bool asc_desc=true)
         {
 
             if (pagenumber <= 0)
                 return BadRequest("pagenumber is 0 or negative");
             if(pagesize <= 0)
                 return BadRequest("pagesize is 0 or negative");
-            return Ok(_brandServices.ListOfBrands(pagenumber, pagesize));
+            return Ok(_brandServices.ListOfBrands(pagenumber, pagesize,order,asc_desc));
 
         }
 
