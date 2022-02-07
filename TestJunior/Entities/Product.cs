@@ -15,6 +15,7 @@ namespace TestJunior
         public string ShortDescription { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
+        public bool isDeleted { get; set; }
 
         public Brand Brand { get; set; }
         /// property that represents the foreign key between ProductCategories and Product

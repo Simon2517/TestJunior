@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using TestJunior.DetailedEntities;
 using TestJunior.Repository;
 
@@ -12,9 +13,18 @@ namespace TestJunior.Services
             _Productrepo = _productrepo;
         }
 
-        public IQueryable<Product> OrderedProducts(int order=0,bool asc_desc=true)
+        public IQueryable<Product> FilterProducts(string brandName)
         {
-            var prods= _Productrepo.GetAll();
+            return _Productrepo.GetAll().Where(x => x.Brand.BrandName == brandName);
+        }
+
+        public IQueryable<Product> OrderedProducts(int order=0,bool asc_desc=true,string brandName="")
+        {
+            IQueryable<Product> prods;
+            if (string.IsNullOrEmpty(brandName))
+                prods=_Productrepo.GetAll();
+            else
+                prods= FilterProducts(brandName);
             switch (order)
             {
                 case 1:
@@ -41,12 +51,12 @@ namespace TestJunior.Services
             }
 
         }
-        public PaginatedList<PaginatedProduct> ListOfProducts(int pagenumber, int pagesize,int order,bool asc_desc)
+        public PaginatedList<PaginatedProduct> ListOfProducts(int pagenumber, int pagesize,int order,bool asc_desc,string brandName)
         {
             if (pagenumber <= 0 || pagesize <= 0)
                 return null;
                 
-                IQueryable<PaginatedProduct> Prods = OrderedProducts(order,asc_desc)
+                IQueryable<PaginatedProduct> Prods = OrderedProducts(order,asc_desc,brandName)
                     .Select(prod => new PaginatedProduct
                     {
                         Id=prod.ProductId,
@@ -61,7 +71,8 @@ namespace TestJunior.Services
 
         public IQueryable<APIProductDetail> ProductDetail(int id)
         {
-            var Product = _Productrepo.GetAll()
+            
+            var Product = _Productrepo.GetById(id)
                 .Select(prod => new APIProductDetail
                 {
                     ProductId = prod.ProductId,
@@ -88,6 +99,12 @@ namespace TestJunior.Services
 
             return Product;
 
+        }
+
+        public async Task<int> DeleteProductAsync(int id)
+        {
+             return await _Productrepo.deleteAsync(id);
+            
         }
     }
 }

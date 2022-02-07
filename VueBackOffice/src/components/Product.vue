@@ -1,6 +1,6 @@
 <template>
   <div v-if="info !== null">
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover text-start">
       <thead>
         <tr>
           <th scope="col">Nome Brand</th>
@@ -10,17 +10,34 @@
         </tr>
       </thead>
       <tbody>
+        <tr>
+          <td colspan="4">
+            <select class="form-select-sm w-auto" @change="onChange($event)">
+              <option default value="">Tutti i brand</option>
+              <option
+                v-for="(item, index) in Listofnames"
+                :key="index"
+                :value="item"
+              >
+                {{ item }}
+              </option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+      <tbody>
         <tr v-for="(item, index) in info.listOfElements" :key="index">
-          <td class="w-25">{{ item.brandName }}</td>
-          <td class="w-25">{{ item.name }}</td>
-          <td class="text-start w-50 ps-5">
-            <span class="badge bg-success"
+          <td class="w-25 align-middle">{{ item.brandName }}</td>
+          <td class="w-25 align-middle">{{ item.name }}</td>
+          <td class="text-start w-50 align-middle">
+            <span
+              class="badge bg-success"
               v-for="(cat, i) in info.listOfElements[index].categories"
               :key="i"
               >{{ cat }}</span
             >
           </td>
-          <td class="w-25">{{ item.price }}€</td>
+          <td class="w-25 align-middle">{{ item.price }}€</td>
         </tr>
       </tbody>
     </table>
@@ -56,6 +73,7 @@
 </template>
 
 <script>
+import brandServices from "../services/brandServices";
 import productServices from "../services/productServices";
 export default {
   data() {
@@ -66,6 +84,8 @@ export default {
       pageSize: 10,
       orderProperty: 0,
       asc: true,
+      Listofnames: null,
+      brandFilter: "",
     };
   },
   methods: {
@@ -74,8 +94,10 @@ export default {
         this.pageNumber,
         this.pageSize,
         this.orderProperty,
-        this.asc
+        this.asc,
+        this.brandFilter
       );
+      this.Listofnames = await brandServices.getBrandsName();
       this.categories = this.info.listOfElements[0].categories;
     },
     async next() {
@@ -90,6 +112,11 @@ export default {
       this.pageNumber = index;
       await this.load();
     },
+    async onChange(event) {
+      this.pageNumber=1
+      this.brandFilter = event.target.value;
+      await this.load();
+    },
   },
   async created() {
     await this.load();
@@ -97,8 +124,17 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 a {
   cursor: pointer;
+};
+.t_body{
+  border: 1px solid black;
+};
+.remove-border {
+  border-collapse:initial;
+};
+table {
+  border-collapse: initial;
 }
 </style>

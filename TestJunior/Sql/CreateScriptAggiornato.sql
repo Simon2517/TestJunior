@@ -7,7 +7,8 @@ CREATE TABLE Account(
 Id INT PRIMARY KEY IDENTITY,
 Email VARCHAR(100) NOT NULL unique,
 Password VARCHAR(100) NOT NULL,
-AccountType tinyint not null
+AccountType tinyint not null,
+isDeleted bit default 0 not null
 )
 go
 --creating Brand Table
@@ -16,6 +17,7 @@ Id INT PRIMARY KEY IDENTITY,
 AccountId INT NOT NULL unique,
 BrandName VARCHAR(100) NOT NULL,
 Description VARCHAR(255),
+isDeleted bit default 0 not null
 )
 go
 --creating Foreign key between Brand and Account
@@ -28,7 +30,8 @@ CREATE TABLE [User](
 Id INT PRIMARY KEY IDENTITY,
 AccountId INT NOT NULL unique,
 Name VARCHAR(100) NOT NULL,
-LastName VARCHAR(100) NOT NULL
+LastName VARCHAR(100) NOT NULL,
+isDeleted bit default 0 not null
 )
 go
 --creating Foreign key between User and Account
@@ -44,7 +47,8 @@ BrandId INT NOT NULL,
 Name VARCHAR(150) NOT NULL,
 ShortDescription VARCHAR(255),
 Price DECIMAL(18,2) NOT NULL,
-Description VARCHAR(255)
+Description VARCHAR(255),
+isDeleted bit default 0 not null
 )
 go
 --creating Foreign key between Brand and Product
@@ -55,14 +59,16 @@ go
 --creating Category table
 CREATE TABLE Category(
 Id INT PRIMARY KEY IDENTITY,
-Name VARCHAR(50) NOT NULL
+Name VARCHAR(50) NOT NULL,
+isDeleted bit default 0 not null
 )
 go
 --creating Product Categories table
 CREATE TABLE ProductCategories(
 ProductId INT ,
 CategoryId INT,
-PRIMARY KEY(ProductId,CategoryId)
+PRIMARY KEY(ProductId,CategoryId),
+isDeleted bit default 0 not null
 )
 go
 --creating Foreign key between Product and ProductCatgories
@@ -78,7 +84,8 @@ go
 --creating Nation table
 CREATE TABLE Nation(
 Id INT PRIMARY KEY IDENTITY,
-Name VARCHAR(50) NOT NULL
+Name VARCHAR(50) NOT NULL,
+isDeleted bit default 0 not null
 )
 go
 --creating InfoRequest table
@@ -94,7 +101,8 @@ StateId INT NOT NULL,
 Phone VARCHAR(10),
 PostalCode VARCHAR(10),
 RequestText VARCHAR(255) NOT NULL,
-InsertedDate DATETIME NOT NULL
+InsertedDate DATETIME NOT NULL,
+isDeleted bit default 0 not null
 )
 go
 --creating foreign key between User and Inforequest
@@ -118,7 +126,8 @@ Id INT PRIMARY KEY IDENTITY,
 AccountId INT NOT NULL,
 InforequestId INT NOT NULL,
 ReplyText VARCHAR(255) NOT NULL,
-InsertedDate DATETIME NOT NULL
+InsertedDate DATETIME NOT NULL,
+isDeleted bit default 0 not null
 )
 go
 --creating foreign key between Account and InforequestReply

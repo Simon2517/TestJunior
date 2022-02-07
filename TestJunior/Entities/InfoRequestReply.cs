@@ -9,6 +9,7 @@ namespace TestJunior
     public class InfoRequestReply
     {
         public int Id { get; set; }
+        public bool isDeleted { get; set; }
         public int AccountId { get; set; }
         public int InfoRequestId { get; set; }
         public string ReplyText { get; set; }

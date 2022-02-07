@@ -7,8 +7,8 @@ using TestJunior.Services;
 
 namespace TestJunior.Controllers
 {
-        [ApiController]
-        [Route("[controller]")] 
+    [ApiController]
+    [Route("[controller]")]
     public class BrandController : ControllerBase
     {
 
@@ -27,14 +27,14 @@ namespace TestJunior.Controllers
         /// A Bad request if either pagenumber or pagesize are 0 or below
         /// A paginated list of Brands if the input parameters are valid</returns>
         [HttpGet("brands/{pagenumber}/{pagesize}/{order}/{asc_desc}")]
-        public IActionResult GetAllPAginatedBrands(int pagenumber=1, int pagesize=10,int order=0,bool asc_desc=true)
+        public IActionResult GetAllPAginatedBrands(int pagenumber = 1, int pagesize = 10, int order = 0, bool asc_desc = true)
         {
 
             if (pagenumber <= 0)
                 return BadRequest("pagenumber is 0 or negative");
-            if(pagesize <= 0)
+            if (pagesize <= 0)
                 return BadRequest("pagesize is 0 or negative");
-            return Ok(_brandServices.ListOfBrands(pagenumber, pagesize,order,asc_desc));
+            return Ok(_brandServices.ListOfBrands(pagenumber, pagesize, order, asc_desc));
 
         }
 
@@ -54,6 +54,12 @@ namespace TestJunior.Controllers
                 return BadRequest("Id can't be 0 or negative");
 
             return Ok(_brandServices.BrandDetail(id).FirstOrDefault());
+        }
+
+        [HttpGet("brandnames")]
+        public IActionResult GetAllBrandNames()
+        {
+            return Ok(_brandServices.GetAllBrandNames());
         }
 
     }

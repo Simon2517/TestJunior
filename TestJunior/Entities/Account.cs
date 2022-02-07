@@ -1,5 +1,4 @@
 ﻿
-
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
@@ -11,6 +10,7 @@ namespace TestJunior
     public class Account
     {
         public int Id { get; set; }
+        public bool isDeleted { get; set; }
         public string Email { get;  set; }
         public string Password { get;  set; }
         public byte AccountType { get;  set; }

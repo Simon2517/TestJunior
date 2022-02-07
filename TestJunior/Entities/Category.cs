@@ -9,10 +9,10 @@ namespace TestJunior
     public class Category
     {
         public int Id { get; set; }
+        public bool isDeleted { get; set; }
         public string Name { get; set; }
         /// property that represents the foreign key between ProductCategories and Category
         public  IEnumerable<ProductCategories> ProdsCategories { get; set; } = new List<ProductCategories>();
-        public int NumOfProducts { get; set; }
 
     }
 }

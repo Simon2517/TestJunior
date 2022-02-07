@@ -10,6 +10,7 @@ namespace TestJunior
     public class InfoRequest
     {
         public int Id { get; set; }
+        public bool isDeleted { get; set; }
         public int ProductId { get; set; }
         public int? UserId { get; set; }
         public string Name { get; set; }

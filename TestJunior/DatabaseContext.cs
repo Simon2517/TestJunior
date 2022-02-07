@@ -28,6 +28,7 @@ namespace TestJunior
                 entity.Property(a=>a.Email).IsRequired();
                 entity.Property(a=>a.Password).IsRequired();
                 entity.Property(a=>a.AccountType).IsRequired();
+                entity.HasQueryFilter(a => !a.isDeleted);
 
             });
             ///Mapping the model for Brand, specifying its primary key as identity and not null properties
@@ -36,8 +37,10 @@ namespace TestJunior
             entity.Property(b => b.Id).ValueGeneratedOnAdd();
             entity.Property(b => b.AccountId).IsRequired();
             entity.Property(b => b.BrandName).IsRequired();
+            entity.HasQueryFilter(b => !b.isDeleted);
 
-            ///Mapping foreign key between Account and Brand
+
+                ///Mapping foreign key between Account and Brand
                 modelBuilder.Entity<Brand>()
                     .HasOne(b => b.Account)
                         .WithOne(a => a.Brand)
@@ -51,6 +54,7 @@ namespace TestJunior
                 entity.Property(u => u.AccountId).IsRequired();
                 entity.Property(u => u.Name).IsRequired();
                 entity.Property(u => u.LastName).IsRequired();
+                entity.HasQueryFilter(u => !u.isDeleted);
 
 
                 ///Mapping foreign key between Account and User
@@ -66,6 +70,7 @@ namespace TestJunior
                 entity.Property(p => p.BrandId).IsRequired();
                 entity.Property(p => p.Name).IsRequired();
                 entity.Property(p => p.Price).IsRequired();
+                entity.HasQueryFilter(p => !p.isDeleted);
 
                 ///Mapping foreign key between Product and Brand
                 modelBuilder.Entity<Product>()
@@ -84,6 +89,8 @@ namespace TestJunior
                 entity.Property(Ir => Ir.InsertedDate).IsRequired();
                 entity.Property(Ir => Ir.Name).IsRequired();
                 entity.Property(Ir => Ir.LastName).IsRequired();
+                entity.HasQueryFilter(Ir => !Ir.isDeleted);
+
 
                 ///Mapping foreign key between InfoRequest and Product
                 modelBuilder.Entity<InfoRequest>()
@@ -111,6 +118,8 @@ namespace TestJunior
                 entity.Property(Irr => Irr.InfoRequestId).IsRequired();
                 entity.Property(Irr => Irr.ReplyText).IsRequired();
                 entity.Property(Irr => Irr.InsertedDate).IsRequired();
+                entity.HasQueryFilter(Irr => !Irr.isDeleted);
+
 
                 ///Mapping foreign key between InfoRequestReply and Account
                 modelBuilder.Entity<InfoRequestReply>()
@@ -129,12 +138,15 @@ namespace TestJunior
             modelBuilder.Entity<Nation>(entity => {
                 entity.Property(n => n.Id).ValueGeneratedOnAdd();
                 entity.Property(n => n.Name).IsRequired();
+                entity.HasQueryFilter(n => !n.isDeleted);
+
             });
 
             ///Mapping the model for Category, specifying its primary key as identity and not null properties
             modelBuilder.Entity<Category>(entity => {
                 entity.Property(c => c.Id).ValueGeneratedOnAdd();
                 entity.Property(c => c.Name).IsRequired();
+                entity.HasQueryFilter(c => !c.isDeleted);
 
             });
 
@@ -150,6 +162,7 @@ namespace TestJunior
                 entity.HasOne(Pc => Pc.Product)
                         .WithMany(P => P.ProdsCategories)
                       .HasForeignKey(p => p.ProductId);
+                entity.HasQueryFilter(pc=>!pc.isDeleted);
             });
         }
 

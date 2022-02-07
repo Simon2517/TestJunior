@@ -1,12 +1,15 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using TestJunior.DetailedEntities;
 
 namespace TestJunior.Services
 {
     public interface IProductServices
     {
-        public IQueryable<Product> OrderedProducts(int order,bool asc_desc);
-        public PaginatedList<PaginatedProduct> ListOfProducts(int pagenumber, int pagesize, int order, bool asc_desc);
+        public IQueryable<Product> OrderedProducts(int order,bool asc_desc, string brandName);
+        public IQueryable<Product> FilterProducts(string brandName);
+        public PaginatedList<PaginatedProduct> ListOfProducts(int pagenumber, int pagesize, int order, bool asc_desc, string brandName);
         public IQueryable<APIProductDetail> ProductDetail(int id);
+        public Task<int> DeleteProductAsync(int id);
     }
 }

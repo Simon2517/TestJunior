@@ -25,8 +25,8 @@ namespace TestJunior.Controllers
         /// <returns>
         /// A Bad request if either pagenumber or pagesize are 0 or below
         /// A paginated list of Brands if the input parameters are valid</returns>
-        [HttpGet("requests/{pagenumber}/{pagesize}/{order}/{asc_desc}")]
-        public IActionResult GetAllPaginatedRequests(int pagenumber=1, int pagesize=10,bool asc_desc=true)
+        [HttpGet("requests/{pagenumber}/{pagesize}/{asc_desc}")]
+        public IActionResult GetAllPaginatedRequests(int pagenumber=1, int pagesize=10,bool asc_desc=false)
         {
 
             if (pagenumber <= 0)

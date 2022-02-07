@@ -8,8 +8,8 @@
       </div>
 
       
-      <div class="row">
-        <div class="col"><SideBar /></div>
+      <div class="row ">
+        <div class="col vh-100"><SideBar /></div>
       </div>
     </div>
   </div>
@@ -21,7 +21,8 @@ import SideBar from "./components/SideBar.vue";
 export default {
   name: "App",
   components: {
-    SideBar,
+    SideBar
+
   },
 };
 </script>
@@ -33,5 +34,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100%;
 }
 </style>

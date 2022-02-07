@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 using TestJunior.DetailedEntities;
 using TestJunior.Repository;
 using TestJunior.Services;
@@ -25,15 +26,15 @@ namespace TestJunior.Controllers
         /// <returns>
         /// A Bad request if either pagenumber or pagesize are 0 or below
         /// A paginated list of Brands if the input parameters are valid</returns>
-        [HttpGet("products/{pagenumber}/{pagesize}/{order}/{asc_desc}")]
-        public IActionResult GetAllPaginatedProducts(int pagenumber=1, int pagesize=10,int order=0,bool asc_desc=true)
+        [HttpGet("products/{pagenumber}/{pagesize}/{order}/{asc_desc}/{brandname?}")]
+        public IActionResult GetAllPaginatedProducts(int pagenumber=1, int pagesize=10,int order=0,bool asc_desc=true,string brandName="")
         {
 
             if (pagenumber <= 0)
                 return BadRequest("pagenumber is 0 or negative");
             if(pagesize <= 0)
                 return BadRequest("pagesize is 0 or negative");
-            return Ok(_productServices.ListOfProducts(pagenumber, pagesize,order,asc_desc));
+            return Ok(_productServices.ListOfProducts(pagenumber, pagesize,order,asc_desc,brandName));
 
         }
 
@@ -53,6 +54,16 @@ namespace TestJunior.Controllers
                 return BadRequest("Id can't be 0 or negative");
 
             return Ok(_productServices.ProductDetail(id).FirstOrDefault());
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProductAsync(int id)
+        {
+            if (id <= 0)
+                return BadRequest("Id can't be 0 or negative");
+            await _productServices.DeleteProductAsync(id);
+            return Ok();
         }
 
     }

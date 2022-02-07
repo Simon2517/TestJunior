@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TestJunior.DetailedEntities;
 using TestJunior.Repository;
 
@@ -79,6 +80,16 @@ namespace TestJunior.Services
                         return prods.OrderByDescending(x => x.Id);
 
             }
+        }
+
+        public List<string> GetAllBrandNames()
+        {
+            var list=new List<string>();
+            foreach (Brand x in _Brandrepo.GetAll())
+            {
+                list.Add(x.BrandName);
+            }
+            return list;
         }
     }
 }

@@ -13,7 +13,15 @@ export default {
 
     },
 
+    getBrandsName()
 
+    {
+
+        return axios.get("https://localhost:44355/Brand/brandnames")
+
+                .then(response => (response.data));
+
+    },
 
     getBrandDetail(id)
 

@@ -7,6 +7,7 @@ namespace TestJunior
     /// </summary>
     public class ProductCategories
     {
+        public bool isDeleted { get; set; }
         public int ProductId { get; set; }
         public int CategoryId { get; set; }
 

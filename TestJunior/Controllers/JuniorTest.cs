@@ -89,7 +89,7 @@ namespace TestJunior.Controllers
                             select new Category{
                                 Id=Categories.Key.Id,
                                 Name=Categories.Key.Name,
-                                NumOfProducts=Categories.Count()};
+                                /*NumOfProducts=Categories.Count()*/};
             
                 var Brands = _ctx.Brand
                         .Include(b => b.Products)

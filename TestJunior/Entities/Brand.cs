@@ -8,7 +8,8 @@ namespace TestJunior
     /// </summary>
     public class Brand
     {
-        public int Id { get;  set; }
+        public int Id { get; set; }
+        public bool isDeleted { get; set; }
         public int? AccountId { get;  set; }
         public string BrandName { get;  set; }
         public string Description { get;  set; }

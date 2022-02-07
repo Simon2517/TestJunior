@@ -3,14 +3,18 @@
     <table class="table table-striped table-hover">
       <thead>
         <tr>
-          <th scope="col">Id</th>
           <th scope="col">Nome Brand</th>
+          <th scope="col">Nome Prodotto</th>
+          <th scope="col">Nome Richiedente</th>
+          <th scope="col">Data Richiesta</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item,object, index) in info.listOfElements" :key="index">
-          <td>{{ item.id }}</td>
+        <tr v-for="(item, index) in info.listOfElements" :key="index">
+          <td>{{ item.brandName }}</td>
+          <td>{{ item.productName }}</td>
           <td>{{ item.name }}</td>
+          <td>{{ item.requestedDate }}</td>
         </tr>
       </tbody>
     </table>
@@ -34,23 +38,21 @@
 </template>
 
 <script>
-import brandServices from "../services/brandServices";
+import inforequest from "../services/inforequestServices";
 export default {
   data() {
     return {
       info: null,
       pageNumber: 1,
       pageSize: 10,
-      orderProperty: 0,
-      asc: true,
+      asc: false,
     };
   },
   methods: {
     async load() {
-      this.info = await brandServices.getBrands(
+      this.info = await inforequest.getRequests(
         this.pageNumber,
         this.pageSize,
-        this.orderProperty,
         this.asc
       );
     },

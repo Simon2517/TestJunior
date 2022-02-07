@@ -28,7 +28,7 @@ namespace TestJunior.Services
             return PaginatedList<PaginatedRequest>.Create(Reqs, pagenumber, pagesize);
         }
 
-        public IQueryable<InfoRequest> OrderedRequests(bool asc_desc)
+        public IQueryable<InfoRequest> OrderedRequests(bool asc_desc=false)
         {
             var reqs = _Requestrepo.GetAll();
             if (asc_desc)

@@ -1,20 +1,16 @@
 <template>
-  <div class="container-fluid p-0 ">
-
-    <div class="row ">
-      <div class="col-2 bg-light vh-100 ">
-        <ul class="nav flex-column bg-light text-start ">
+  <div class="container-fluid p-0">
+    <div class="row">
+      <div class="col-2 bg-light vh-100">
+        <ul class="nav flex-column bg-light text-start">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Active</a>
+            <router-link to="/brands" class="nav-link">Brands</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/brands" class="nav-link" >Brands</router-link>
+            <router-link to="/products" class="nav-link">Products</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/products" class="nav-link" >Products</router-link>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled">Disabled</a>
+            <router-link to="/inforequest" class="nav-link">Leads</router-link>
           </li>
         </ul>
       </div>
