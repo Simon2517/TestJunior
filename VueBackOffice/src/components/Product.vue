@@ -1,12 +1,65 @@
 <template>
   <div v-if="info !== null">
+
     <table class="table table-striped table-hover text-start">
       <thead>
         <tr>
-          <th scope="col">Nome Brand</th>
-          <th scope="col">Nome Prodotto</th>
+          <th scope="col">
+            <tr>
+              <td class="w-100 text-start">Nome Brand</td>
+              <td @click="orderby(1)">
+                <i
+                  v-if="this.asc === true && this.orderProperty === 1"
+                  class="bi bi-caret-up-fill d-flex"
+                ></i>
+                <i v-else class="bi bi-caret-up-fill d-flex notselected"></i>
+
+                <i
+                  v-if="this.asc === false && this.orderProperty === 1"
+                  class="bi bi-caret-down-fill d-flex"
+                ></i>
+                <i v-else class="bi bi-caret-down-fill d-flex notselected"></i>
+              </td>
+            </tr>
+          </th>
+          <th scope="col">
+            <tr>
+              <td class="w-100 text-start">Nome Prodotto</td>
+              <td @click="orderby(2)">
+                <i
+                  v-if="this.asc === true && this.orderProperty === 2"
+                  class="bi bi-caret-up-fill d-flex"
+                ></i>
+                <i v-else class="bi bi-caret-up-fill d-flex notselected"></i>
+
+                <i
+                  v-if="this.asc === false && this.orderProperty === 2"
+                  class="bi bi-caret-down-fill d-flex"
+                ></i>
+                <i v-else class="bi bi-caret-down-fill d-flex notselected"></i>
+              </td>
+            </tr>
+          </th>
           <th scope="col">Categorie</th>
-          <th scope="col">Prezzo</th>
+          <th scope="col">
+            <tr>
+              <td class="w-100 text-start">Prezzo</td>
+              <td @click="orderby(3)">
+                <i
+                  v-if="this.asc === true && this.orderProperty === 3"
+                  class="bi bi-caret-up-fill d-flex"
+                >
+                </i>
+                <i v-else class="bi bi-caret-up-fill d-flex notselected"> </i>
+
+                <i
+                  v-if="this.asc === false && this.orderProperty === 3"
+                  class="bi bi-caret-down-fill d-flex"
+                ></i>
+                <i v-else class="bi bi-caret-down-fill d-flex notselected"> </i>
+              </td>
+            </tr>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -28,10 +81,10 @@
       <tbody>
         <tr v-for="(item, index) in info.listOfElements" :key="index">
           <td class="w-25 align-middle">{{ item.brandName }}</td>
-          <td class="w-25 align-middle">{{ item.name }}</td>
+          <td class="w-25 align-middle"><span>{{ item.name }}</span><span class="text-primary">{{item.shortDescription}}</span></td>
           <td class="text-start w-50 align-middle">
             <span
-              class="badge bg-success"
+              class="badge bg-primary"
               v-for="(cat, i) in info.listOfElements[index].categories"
               :key="i"
               >{{ cat }}</span
@@ -55,8 +108,8 @@
         <a
           class="page-link"
           v-if="
-            (index <= pageNumber + 2 && index >= pageNumber) ||
-            index === info.totalPages
+            (index <= pageNumber + 2 && index >= pageNumber - 2) ||
+            (index === info.totalPages || index === 1)
           "
           @click="selectedIndex(index)"
           >{{ index }}</a
@@ -73,8 +126,9 @@
 </template>
 
 <script>
-import brandServices from "../services/brandServices";
-import productServices from "../services/productServices";
+import { RepositoryFactory } from "../services/repositoryFactory";
+const ProductRepo = RepositoryFactory.get("products");
+const BrandRepo = RepositoryFactory.get("brands");
 export default {
   data() {
     return {
@@ -86,19 +140,19 @@ export default {
       asc: true,
       Listofnames: null,
       brandFilter: "",
+      listOfproperties: [],
     };
   },
   methods: {
     async load() {
-      this.info = await productServices.getProducts(
+      this.info = await ProductRepo.getProducts(
         this.pageNumber,
         this.pageSize,
         this.orderProperty,
         this.asc,
         this.brandFilter
       );
-      this.Listofnames = await brandServices.getBrandsName();
-      this.categories = this.info.listOfElements[0].categories;
+      this.Listofnames = await BrandRepo.getBrandsName();
     },
     async next() {
       if (this.pageNumber < this.info.totalPages) this.pageNumber++;
@@ -113,8 +167,16 @@ export default {
       await this.load();
     },
     async onChange(event) {
-      this.pageNumber=1
+      this.pageNumber = 1;
       this.brandFilter = event.target.value;
+      await this.load();
+    },
+    async orderby(property) {
+      if(property!=this.orderProperty)
+        this.asc=true
+      else
+        this.asc = !this.asc;
+      this.orderProperty = property;
       await this.load();
     },
   },
@@ -124,17 +186,18 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 a {
   cursor: pointer;
-};
-.t_body{
-  border: 1px solid black;
-};
-.remove-border {
-  border-collapse:initial;
-};
-table {
-  border-collapse: initial;
+}
+.bi::before {
+  line-height: 0.75;
+}
+.bi {
+  line-height: 0.75;
+  cursor: pointer;
+}
+.notselected {
+  color: lightgray;
 }
 </style>

@@ -56,14 +56,22 @@ namespace TestJunior.Controllers
             return Ok(_productServices.ProductDetail(id).FirstOrDefault());
         }
 
-
+        /// <summary>
+        /// soft delete of a product and all its relationed entities records
+        /// </summary>
+        /// <param name="id">id of the product to delete</param>
+        /// <returns>
+        /// 
+        /// </returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProductAsync(int id)
         {
             if (id <= 0)
                 return BadRequest("Id can't be 0 or negative");
-            await _productServices.DeleteProductAsync(id);
-            return Ok();
+            if(await _productServices.DeleteProductAsync(id)==1)
+                return Ok("item deleted successfully");
+            else
+                return NotFound("item not found");
         }
 
     }

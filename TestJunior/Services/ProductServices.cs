@@ -51,6 +51,16 @@ namespace TestJunior.Services
             }
 
         }
+
+        /// <summary>
+        /// creates a paginated list of ordered and filtered products
+        /// </summary>
+        /// <param name="pagenumber">the page we are at</param>
+        /// <param name="pagesize">the total number of products in that page</param>
+        /// <param name="order">the order of which the list will be ordered</param>
+        /// <param name="asc_desc">the ascendant and descendant option of the order</param>
+        /// <param name="brandName">the name of the brand used to filter the list of products</param>
+        /// <returns>a paginated list</returns>
         public PaginatedList<PaginatedProduct> ListOfProducts(int pagenumber, int pagesize,int order,bool asc_desc,string brandName)
         {
             if (pagenumber <= 0 || pagesize <= 0)
@@ -103,6 +113,9 @@ namespace TestJunior.Services
 
         public async Task<int> DeleteProductAsync(int id)
         {
+            if(id <= 0)
+                return 0;
+            else
              return await _Productrepo.deleteAsync(id);
             
         }

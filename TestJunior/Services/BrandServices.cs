@@ -84,12 +84,19 @@ namespace TestJunior.Services
 
         public List<string> GetAllBrandNames()
         {
-            var list=new List<string>();
-            foreach (Brand x in _Brandrepo.GetAll())
-            {
-                list.Add(x.BrandName);
-            }
+            List<string> list=_Brandrepo.GetAll().Select(b=>b.BrandName).ToList();
             return list;
+        }
+
+        public Brand GetSingleBrand(int id)
+        {
+            return _Brandrepo.GetById(id).FirstOrDefault();
+
+        }
+
+        public int AddBrand(Brand brand)
+        {
+            return _Brandrepo.add(brand);
         }
     }
 }

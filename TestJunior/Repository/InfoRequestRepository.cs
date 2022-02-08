@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace TestJunior.Repository
@@ -13,14 +14,25 @@ namespace TestJunior.Repository
             _ctx = ctx;
         }
 
-        public void add(InfoRequest entity)
+        public int add(InfoRequest entity)
         {
-            throw new System.NotImplementedException();
+            _ctx.InfoRequest.Update(entity);
+            return _ctx.SaveChanges();
         }
 
-        public Task<int> deleteAsync(int id)
+        public async Task<int> deleteAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var inforequest = _ctx.InfoRequest.FirstOrDefault(x => x.Id == id);
+            if (inforequest != null)
+            {
+                inforequest.isDeleted = true;
+
+                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE InfoRequestReply
+                                                         SET isDeleted=1
+                                                         WHERE  InfoRequestId=" + id);
+            }
+
+            return _ctx.SaveChanges();
         }
 
         public IQueryable<InfoRequest> GetAll()
@@ -35,20 +47,10 @@ namespace TestJunior.Repository
             return SingleInforequest;
         }
 
-        public void update(InfoRequest entity)
+        public int update(InfoRequest entity)
         {
-            throw new System.NotImplementedException();
-        }
-
-        Task<int> IRepository<InfoRequest>.add(InfoRequest entity)
-        {
-            throw new System.NotImplementedException();
-        }
-
-
-        Task<int> IRepository<InfoRequest>.update(InfoRequest entity)
-        {
-            throw new System.NotImplementedException();
+            _ctx.InfoRequest.Update(entity);
+            return _ctx.SaveChanges();
         }
     }
 }

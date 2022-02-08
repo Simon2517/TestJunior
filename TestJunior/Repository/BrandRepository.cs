@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace TestJunior.Repository
@@ -13,14 +14,38 @@ namespace TestJunior.Repository
             _ctx = ctx;
         }
 
-        public void add(Brand entity)
+        public async Task<int> deleteAsync(int id)
         {
-            throw new System.NotImplementedException();
-        }
+            var brand = _ctx.Brand.FirstOrDefault(x => x.Id == id);
+            if (brand != null)
+            {
+                brand.isDeleted = true;
 
-        public Task<int> deleteAsync(int id)
-        {
-            throw new System.NotImplementedException();
+                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE Product
+                                                         SET isDeleted=1
+                                                         WHERE BrandId= " + id);
+
+                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE ProductCategories
+                                                         SET isDeleted=1
+                                                         FROM ProductCategories prodCat 
+                                                            join Product p on p.ProductId=prodCat.ProductId
+                                                         WHERE p.BrandId= " + id);
+
+                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE InfoRequest
+                                                         SET isDeleted=1
+                                                         FROM InfoRequest infoRequest 
+                                                            join Product p On infoRequest.ProductId=p.ProductId
+                                                         WHERE  p.BrandId=" + id);
+
+                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE InfoRequestReply
+                                                         SET isDeleted=1
+                                                         FROM InfoRequestReply infoReply 
+                                                            join InfoRequest infoRequest on infoReply.InforequestId=infoRequest.Id
+                                                            join Product p On infoRequest.ProductId=p.ProductId
+                                                         WHERE  p.BrandId=" + id);
+            }
+
+            return _ctx.SaveChanges();
         }
 
         public IQueryable<Brand> GetAll()
@@ -33,14 +58,18 @@ namespace TestJunior.Repository
         {
             return _ctx.Brand.Where(b => b.Id == id);
         }
-        Task<int> IRepository<Brand>.add(Brand entity)
+        public int add(Brand entity)
         {
-            throw new System.NotImplementedException();
+            _ctx.Brand.Add(entity);
+            //_ctx.Product.AddRange(entity.Products);
+            return _ctx.SaveChanges();
         }
 
-        Task<int> IRepository<Brand>.update(Brand entity)
+        public int update(Brand entity)
         {
-            throw new System.NotImplementedException();
+            _ctx.Brand.Update(entity);
+            return _ctx.SaveChanges();
+
         }
     }
 }

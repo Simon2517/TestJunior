@@ -1,14 +1,25 @@
 <template>
   <div v-if="info !== null">
+          <router-link to="/brand/new" class="nav-link">Aggiungi Brand</router-link>
     <table class="table table-striped table-hover">
       <thead>
         <tr>
-          <th scope="col">Id</th>
+          <th scope="col" class="text-end">
+            <tr>
+              <th class="w-100 text-start">Id</th>
+            <th>
+
+              <i class="bi bi-caret-up-fill d-flex"></i>
+              <i class="bi bi-caret-down-fill d-flex"></i>
+
+            </th>
+            </tr>
+          </th>
           <th scope="col">Nome Brand</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item,object, index) in info.listOfElements" :key="index">
+        <tr v-for="(item, object, index) in info.listOfElements" :key="index">
           <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
         </tr>
@@ -19,13 +30,24 @@
       <li class="page-item" :class="this.pageNumber === 1 ? 'disabled' : ''">
         <a class="page-link" @click="previous()">Previous</a>
       </li>
-      <li class="page-item" v-for="index in info.totalPages" :key="index"
-      :class="pageNumber===index ?'active':''">
-            <a class="page-link" v-if="((index<=pageNumber+2)&&(index>=pageNumber))||index===info.totalPages" @click="selectedIndex(index)">{{index}}</a>
+      <li
+        class="page-item"
+        v-for="index in info.totalPages"
+        :key="index"
+        v-bind:class="pageNumber === index ? 'active' : ''"
+      >
+        <a
+          class="page-link"
+          v-if="(index <= pageNumber + 2 && index >= pageNumber-2) ||
+            index === info.totalPages
+          "
+          @click="selectedIndex(index)"
+          >{{ index }}</a
+        >
       </li>
       <li
         class="page-item"
-        :class="this.pageNumber === this.info.totalPages ? 'disabled' : ''"
+        v-bind:class="this.pageNumber === this.info.totalPages ? 'disabled' : ''"
       >
         <a class="page-link" @click="next()">Next</a>
       </li>
@@ -34,7 +56,8 @@
 </template>
 
 <script>
-import brandServices from "../services/brandServices";
+import { RepositoryFactory } from "../services/repositoryFactory";
+const BrandRepo = RepositoryFactory.get("brands");
 export default {
   data() {
     return {
@@ -47,7 +70,7 @@ export default {
   },
   methods: {
     async load() {
-      this.info = await brandServices.getBrands(
+      this.info = await BrandRepo.getBrands(
         this.pageNumber,
         this.pageSize,
         this.orderProperty,
@@ -62,10 +85,10 @@ export default {
       if (this.pageNumber > 1) this.pageNumber--;
       await this.load();
     },
-    async selectedIndex(index){
-        this.pageNumber=index
-        await this.load()
-    }
+    async selectedIndex(index) {
+      this.pageNumber = index;
+      await this.load();
+    },
   },
   async created() {
     await this.load();
@@ -74,7 +97,13 @@ export default {
 </script>
 
 <style scoped>
-a{
-    cursor: pointer;
+a {
+  cursor: pointer
 }
+.iconcolor{
+  color: red
+}
+.bi::before{
+  line-height: 0.75
+};
 </style>

@@ -9,7 +9,7 @@ namespace TestJunior.Repository
         public IQueryable<T> GetAll();
 
         public Task<int> deleteAsync(int id);
-        public Task<int> update(T entity);
-        public Task<int> add(T entity);
+        public int update(T entity);
+        public int add(T entity);
     }
 }

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Brands from '../components/Brand.vue';
 import Products from '../components/Product.vue';
 import InfoRequest from '../components/Inforequest.vue';
+import AddBrand from '../components/AddBrand.vue';
 Vue.use(Router)
 
 export default new Router({
@@ -11,6 +12,11 @@ export default new Router({
             path: '/brands',
             name: 'brandList',
             component:Brands
+        },
+        {
+            path: '/brand/new',
+            name: 'addBrand',
+            component:AddBrand
         },
         {
             path: '/products',

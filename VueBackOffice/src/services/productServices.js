@@ -1,4 +1,4 @@
-import axios from "axios";
+import Repository from "./repository";
 
 const resource="/Product"
 export default {
@@ -7,7 +7,7 @@ export default {
 
     {
 
-        return axios.get(`https://localhost:44355${resource}/products/${pageNumber}/${pageSize}/${orderProperty}/${asc}/${brandFilter}`)
+        return Repository.get(`https://localhost:44355${resource}/products/${pageNumber}/${pageSize}/${orderProperty}/${asc}/${brandFilter}`)
 
                 .then(response => (response.data));
 
@@ -19,7 +19,7 @@ export default {
 
     {
 
-        return axios.get(`${resource}/${id}`)
+        return Repository.get(`${resource}/${id}`)
 
                 .then(response => (response))
 

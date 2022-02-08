@@ -56,10 +56,28 @@ namespace TestJunior.Controllers
             return Ok(_brandServices.BrandDetail(id).FirstOrDefault());
         }
 
+        /// <summary>
+        /// list of brand names used to filter the products
+        /// </summary>
+        /// <returns>list of strings</returns>
         [HttpGet("brandnames")]
         public IActionResult GetAllBrandNames()
         {
             return Ok(_brandServices.GetAllBrandNames());
+        }
+
+
+        [HttpGet("edit/{id}")]
+        public IActionResult EditBrand(int id)
+        {
+            return Ok();
+        }
+
+
+        [HttpPost("new")]
+        public IActionResult AddBrand(Brand brand)
+        {
+            return Ok(_brandServices.AddBrand(brand));
         }
 
     }

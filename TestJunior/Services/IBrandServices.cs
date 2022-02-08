@@ -10,5 +10,6 @@ namespace TestJunior.Services
         public PaginatedList<PaginatedBrand> ListOfBrands(int pagenumber, int pagesize,int order, bool asc_desc);
         public IQueryable<APIBrandDetail> BrandDetail(int id);
         public List<string> GetAllBrandNames();
+        public int AddBrand(Brand brand);
     }
 }

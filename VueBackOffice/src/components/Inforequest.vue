@@ -23,9 +23,21 @@
       <li class="page-item" :class="this.pageNumber === 1 ? 'disabled' : ''">
         <a class="page-link" @click="previous()">Previous</a>
       </li>
-      <li class="page-item" v-for="index in info.totalPages" :key="index"
-      :class="pageNumber===index ?'active':''">
-            <a class="page-link" v-if="((index<=pageNumber+2)&&(index>=pageNumber))||index===info.totalPages" @click="selectedIndex(index)">{{index}}</a>
+      <li
+        class="page-item"
+        v-for="index in info.totalPages"
+        :key="index"
+        :class="pageNumber === index ? 'active' : ''"
+      >
+        <a
+          class="page-link"
+          v-if="
+            (index <= pageNumber + 2 && index >= pageNumber - 2) ||
+            index === info.totalPages
+          "
+          @click="selectedIndex(index)"
+          >{{ index }}</a
+        >
       </li>
       <li
         class="page-item"
@@ -38,7 +50,8 @@
 </template>
 
 <script>
-import inforequest from "../services/inforequestServices";
+import { RepositoryFactory } from "../services/repositoryFactory";
+const InforequestRepo = RepositoryFactory.get("inforequests");
 export default {
   data() {
     return {
@@ -50,7 +63,7 @@ export default {
   },
   methods: {
     async load() {
-      this.info = await inforequest.getRequests(
+      this.info = await InforequestRepo.getRequests(
         this.pageNumber,
         this.pageSize,
         this.asc
@@ -64,10 +77,10 @@ export default {
       if (this.pageNumber > 1) this.pageNumber--;
       await this.load();
     },
-    async selectedIndex(index){
-        this.pageNumber=index
-        await this.load()
-    }
+    async selectedIndex(index) {
+      this.pageNumber = index;
+      await this.load();
+    },
   },
   async created() {
     await this.load();
@@ -76,7 +89,7 @@ export default {
 </script>
 
 <style scoped>
-a{
-    cursor: pointer;
+a {
+  cursor: pointer;
 }
 </style>

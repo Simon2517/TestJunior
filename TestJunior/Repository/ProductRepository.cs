@@ -19,33 +19,27 @@ namespace TestJunior.Repository
         {
 
             var product = _ctx.Product.FirstOrDefault(x => x.ProductId == id);
-            product.isDeleted = true;
-            await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE ProductCategories
+            if (product != null)
+            {
+                product.isDeleted = true;
+                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE ProductCategories
                                                      SET isDeleted=1
                                                      WHERE ProductId= " + id);
-            await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE InfoRequest
+
+                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE InfoRequest
                                                      SET isDeleted=1
-                                                     FROM InfoRequest Ir join Product p On ir.ProductId=p.ProductId
-                                                     WHERE  p.ProductId="+id);
-            await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE InfoRequestReply
-                                                     SET isDeleted=1
-                                                     FROM InfoRequestReply Irr join InfoRequest Ir on InforequestId=Ir.Id
-                                                        join Product p On ir.ProductId=p.ProductId
+                                                     FROM InfoRequest infoRequest join Product p On infoRequest.ProductId=p.ProductId
                                                      WHERE  p.ProductId=" + id);
 
+                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE InfoRequestReply
+                                                     SET isDeleted=1
+                                                     FROM InfoRequestReply infoReply 
+                                                        join InfoRequest infoRequest on infoReply.InforequestId=infoRequest.Id
+                                                        join Product p On infoRequest.ProductId=p.ProductId
+                                                     WHERE  p.ProductId=" + id);
+            }
 
-
-
-            //var product = _ctx.Product.Include(p => p.ProdsCategories)
-            //                          .Include(p => p.InfoRequests)
-            //                                .ThenInclude(ir => ir.InfoRequestReplies)
-            //                          .FirstOrDefault(p => p.ProductId == id);
-            //product.isDeleted = true;
-            //product.ProdsCategories.ToList().ForEach(p =>p.isDeleted = true);
-            //product.InfoRequests.ToList().ForEach(p=>p.isDeleted = true);
-            //product.InfoRequests.SelectMany(p=>p.InfoRequestReplies).ToList().ForEach(p=>p.isDeleted = true);
-            _ctx.SaveChanges();
-            return 1;
+            return _ctx.SaveChanges();
         }
 
         public IQueryable<Product> GetAll()
@@ -58,14 +52,16 @@ namespace TestJunior.Repository
             return _ctx.Product.Where(p=>p.ProductId == id);
         }
 
-        Task<int> IRepository<Product>.add(Product entity)
+        public int add(Product entity)
         {
-            throw new System.NotImplementedException();
+            _ctx.Product.Add(entity);
+            return _ctx.SaveChanges();
         }
 
-        Task<int> IRepository<Product>.update(Product entity)
+        public int update(Product entity)
         {
-            throw new System.NotImplementedException();
+            _ctx.Product.Update(entity);
+            return _ctx.SaveChanges();
         }
     }
 }

@@ -1,4 +1,4 @@
-import axios from "axios";
+import Repository from "./repository";
 
 const resource="/InfoRequest"
 export default {
@@ -7,8 +7,7 @@ export default {
 
     {
 
-        return axios.get(`https://localhost:44355${resource}/requests/${pageNumber}/${pageSize}/${asc}`)
-
+        return Repository.get(`https://localhost:44355${resource}/requests/${pageNumber}/${pageSize}/${asc}`)
                 .then(response => (response.data));
 
     },
@@ -19,7 +18,7 @@ export default {
 
     {
 
-        return axios.get(`${resource}/${id}`)
+        return Repository.get(`${resource}/${id}`)
 
                 .then(response => (response))
 

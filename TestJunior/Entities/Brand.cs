@@ -10,13 +10,13 @@ namespace TestJunior
     {
         public int Id { get; set; }
         public bool isDeleted { get; set; }
-        public int? AccountId { get;  set; }
         public string BrandName { get;  set; }
+        public int AccountId { get; set; }
         public string Description { get;  set; }
         /// property that represents the foreign key between Account and Brand
         public  Account Account { get;  set; }
         /// property that represents the foreign key between Products and Brand
-        public  IEnumerable<Product> Products { get; private set; }=new List<Product>();
+        public  IEnumerable<Product> Products { get;  set; }=new List<Product>();
 
 
     }
