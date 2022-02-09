@@ -1,18 +1,16 @@
 <template>
   <div v-if="info !== null">
-          <router-link to="/brand/new" class="nav-link">Aggiungi Brand</router-link>
+    <router-link to="/brand/new" class="nav-link">Aggiungi Brand</router-link>
     <table class="table table-striped table-hover">
       <thead>
         <tr>
           <th scope="col" class="text-end">
             <tr>
               <th class="w-100 text-start">Id</th>
-            <th>
-
-              <i class="bi bi-caret-up-fill d-flex"></i>
-              <i class="bi bi-caret-down-fill d-flex"></i>
-
-            </th>
+              <th>
+                <i class="bi bi-caret-up-fill d-flex"></i>
+                <i class="bi bi-caret-down-fill d-flex"></i>
+              </th>
             </tr>
           </th>
           <th scope="col">Nome Brand</th>
@@ -38,8 +36,10 @@
       >
         <a
           class="page-link"
-          v-if="(index <= pageNumber + 2 && index >= pageNumber-2) ||
-            index === info.totalPages
+          v-if="
+            (index <= pageNumber + 2 && index >= pageNumber - 2) ||
+            index === info.totalPages ||
+            index === 1
           "
           @click="selectedIndex(index)"
           >{{ index }}</a
@@ -47,7 +47,9 @@
       </li>
       <li
         class="page-item"
-        v-bind:class="this.pageNumber === this.info.totalPages ? 'disabled' : ''"
+        v-bind:class="
+          this.pageNumber === this.info.totalPages ? 'disabled' : ''
+        "
       >
         <a class="page-link" @click="next()">Next</a>
       </li>
@@ -63,7 +65,7 @@ export default {
     return {
       info: null,
       pageNumber: 1,
-      pageSize: 10,
+      pageSize: 20,
       orderProperty: 0,
       asc: true,
     };
@@ -98,12 +100,12 @@ export default {
 
 <style scoped>
 a {
-  cursor: pointer
+  cursor: pointer;
 }
-.iconcolor{
-  color: red
+.iconcolor {
+  color: red;
 }
-.bi::before{
-  line-height: 0.75
-};
+.bi::before {
+  line-height: 0.75;
+}
 </style>

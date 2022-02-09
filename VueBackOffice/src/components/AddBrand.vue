@@ -1,53 +1,81 @@
 <template>
   <div>
     Aggiungi Brand
-
-    <form @submit.prevent="createPost">
-      <div>
-        <label for="BrandName">Brand Name</label>
-        <input type="text" v-model="formData.BrandName" />
-      </div>
-      <div>
-        <label for="AccountId">Account ID</label>
-        <input type="number" v-model="formData.AccountId" />
-      </div>
-      <div>
-        <label for="Products.Name">ProductName</label>
-        <input type="text" v-model="formData.Products[0].Name" />
-      </div>
-      <div>
-        <label for="Products.Price">Price</label>
-        <input type="number" v-model="formData.Products[0].Price" />
-      </div>
-      <button>create post</button>
-    </form>
+    <div class="col-8 offset-2">
+      <form @submit.prevent="createPost()">
+        <div>
+          <label class="form-label" for="BrandName">Brand Name</label>
+          <input
+            class="form-control"
+            type="text"
+            v-model="formData.BrandName"
+          />
+        </div>
+        <div>
+          <label class="form-label" for="Email">Email</label>
+          <input
+            class="form-control"
+            type="text"
+            v-model="formData.Account.Email"
+          />
+        </div>
+        <div>
+          <label class="form-label" for="Password">Password</label>
+          <input
+            class="form-control"
+            type="text"
+            v-model="formData.Account.Password"
+          />
+        </div>
+        <button @click.prevent="addProduct()">add product</button>
+        <div v-for="(item, index) in formData.Products" :key="index">
+          <div>
+            <label class="form-label" for="Name">ProductName</label>
+            <input class="form-control" type="text" v-model="item.Name" />
+          </div>
+          <div>
+            <label class="form-label" for="Price">Price</label>
+            <input
+              class="form-control"
+              type="number"
+              v-model.number="item.Price"
+            />
+          </div>
+        </div>
+        <button>create post</button>
+      </form>
+    </div>
   </div>
 </template>
 
 <script>
 import { RepositoryFactory } from "../services/repositoryFactory";
+const CatRepo = RepositoryFactory.get("categories");
 const BrandRepo = RepositoryFactory.get("brands");
 export default {
   name: "CreatePost",
   data() {
     return {
+      BrandId:null,
       formData: {
         BrandName: "",
-        AccountId: 0,
-        Products: [
-          {
-            Name: "",
-            Price: 0,
-          },
-        ],
-      },
+        Account: { Email: "", Password: "" },
+        Products: [],
+        Categories:null
+      }
+      
     };
   },
   methods: {
-    createPost() {
-      this.formData.AccountId = parseInt(this.formData.AccountId);
-      BrandRepo.addBrand(this.formData);
+    async createPost() {
+      this.BrandId=await BrandRepo.addBrand(this.formData);
+    },
+    addProduct() {
+      this.formData.Products.push({});
     },
   },
+  async created(){
+    this.formData.Categories=await CatRepo.getCategories();
+  }
 };
 </script>

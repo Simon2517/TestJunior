@@ -35,6 +35,7 @@ export default {
     addBrand(brand){
         console.log(brand)
         return Repository.post(`https://localhost:44355${resource}/new`,brand)
+            .then(response=>(response.data))
     }
 
 }

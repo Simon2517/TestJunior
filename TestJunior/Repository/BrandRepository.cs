@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,10 +10,16 @@ namespace TestJunior.Repository
     public class BrandRepository : IRepository<Brand>
     {
         private DatabaseContext _ctx;
+        private IDbContextTransaction transaction;
+
+
+
 
         public BrandRepository(DatabaseContext ctx)
         {
             _ctx = ctx;
+            transaction = _ctx.Database.BeginTransaction();
+
         }
 
         public async Task<int> deleteAsync(int id)
@@ -60,9 +68,20 @@ namespace TestJunior.Repository
         }
         public int add(Brand entity)
         {
-            _ctx.Brand.Add(entity);
-            //_ctx.Product.AddRange(entity.Products);
-            return _ctx.SaveChanges();
+           
+            entity.Account.AccountType = 2;
+            try{
+                _ctx.Brand.Add(entity);
+                _ctx.SaveChanges();
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+            }
+                return entity.Id;
+            
+
         }
 
         public int update(Brand entity)

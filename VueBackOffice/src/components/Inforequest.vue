@@ -33,7 +33,7 @@
           class="page-link"
           v-if="
             (index <= pageNumber + 2 && index >= pageNumber - 2) ||
-            index === info.totalPages
+            (index === info.totalPages || index === 1)
           "
           @click="selectedIndex(index)"
           >{{ index }}</a

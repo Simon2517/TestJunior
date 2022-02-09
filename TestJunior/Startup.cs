@@ -45,6 +45,8 @@ namespace TestJunior
             services.AddControllers();
             services.AddScoped<IRepository<Brand>, BrandRepository>();
             services.AddScoped<IBrandServices, BrandServices>();
+            services.AddScoped<IRepository<Category>, CategoryRepository>();
+            services.AddScoped<ICategoryServices, CategoryServices>();
             services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<IRepository<InfoRequest>, InfoRequestRepository>();

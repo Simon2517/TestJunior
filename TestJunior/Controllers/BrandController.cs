@@ -77,7 +77,10 @@ namespace TestJunior.Controllers
         [HttpPost("new")]
         public IActionResult AddBrand(Brand brand)
         {
-            return Ok(_brandServices.AddBrand(brand));
+            if (_brandServices.AddBrand(brand) != 0)
+                return Ok();
+            else
+                return BadRequest("Errore nell'aggiunta");
         }
 
     }

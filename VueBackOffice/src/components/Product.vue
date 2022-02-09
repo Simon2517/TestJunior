@@ -1,6 +1,5 @@
 <template>
   <div v-if="info !== null">
-
     <table class="table table-striped table-hover text-start">
       <thead>
         <tr>
@@ -9,7 +8,7 @@
               <td class="w-100 text-start">Nome Brand</td>
               <td @click="orderby(1)">
                 <i
-                  v-if="this.asc === true && this.orderProperty === 1"
+                  v-if="this.asc === true && this.orderProperty <= 1"
                   class="bi bi-caret-up-fill d-flex"
                 ></i>
                 <i v-else class="bi bi-caret-up-fill d-flex notselected"></i>
@@ -81,7 +80,10 @@
       <tbody>
         <tr v-for="(item, index) in info.listOfElements" :key="index">
           <td class="w-25 align-middle">{{ item.brandName }}</td>
-          <td class="w-25 align-middle"><span>{{ item.name }}</span><span class="text-primary">{{item.shortDescription}}</span></td>
+          <td class="w-25 align-middle">
+            <span>{{ item.name }}</span
+            ><span class="text-primary">{{ item.shortDescription }}</span>
+          </td>
           <td class="text-start w-50 align-middle">
             <span
               class="badge bg-primary"
@@ -99,21 +101,30 @@
       <li class="page-item" :class="this.pageNumber === 1 ? 'disabled' : ''">
         <a class="page-link" @click="previous()">Previous</a>
       </li>
+      <li class="page-item" :class="pageNumber === 1 ? 'active' : ''">
+        <a class="page-link" @click="selectedIndex(1)"> 1 </a>
+      </li>
+      <li class="page-item">
+        <a v-if="pageNumber >= 5" class="page-link pe-none"> ... </a>
+      </li>
       <li
         class="page-item"
-        v-for="index in info.totalPages"
-        :key="index"
-        :class="pageNumber === index ? 'active' : ''"
+        v-for="item in pages"
+        :key="item"
+        :class="pageNumber === item ? 'active' : ''"
       >
-        <a
-          class="page-link"
-          v-if="
-            (index <= pageNumber + 2 && index >= pageNumber - 2) ||
-            (index === info.totalPages || index === 1)
-          "
-          @click="selectedIndex(index)"
-          >{{ index }}</a
-        >
+        <a class="page-link" @click="selectedIndex(item)">{{ item }}</a>
+      </li>
+      <li class="page-item">
+        <a v-if="pageNumber < pageNumber + 2" class="page-link pe-none"> ... </a>
+      </li>
+      <li
+        class="page-item"
+        :class="pageNumber === info.totalPages ? 'active' : ''"
+      >
+        <a class="page-link" @click="selectedIndex(info.totalPages)">
+          {{ info.totalPages }}
+        </a>
       </li>
       <li
         class="page-item"
@@ -142,6 +153,16 @@ export default {
       brandFilter: "",
       listOfproperties: [],
     };
+  },
+  computed: {
+    pages() {
+      let pages = [];
+      for (let i = 2; i < this.info.totalPages; i++) {
+        if (i <= this.pageNumber + 2 && i >= this.pageNumber - 2) 
+          pages.push(i);
+      }
+      return pages;
+    },
   },
   methods: {
     async load() {
@@ -172,10 +193,8 @@ export default {
       await this.load();
     },
     async orderby(property) {
-      if(property!=this.orderProperty)
-        this.asc=true
-      else
-        this.asc = !this.asc;
+      if (property != this.orderProperty) this.asc = true;
+      else this.asc = !this.asc;
       this.orderProperty = property;
       await this.load();
     },
