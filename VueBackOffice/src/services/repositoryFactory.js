@@ -1,7 +1,7 @@
-import brandServices from "../services/brandServices";
-import productServices from "../services/productServices";
-import inforequestServices from "../services/inforequestServices"
-import categoryrepository from "../services/categoryServices"
+import brandServices from "../services/entityService/brandServices";
+import productServices from "../services/entityService/productServices";
+import inforequestServices from "../services/entityService/inforequestServices"
+import categoryrepository from "../services/entityService/categoryServices"
 
 
 const repositories = {

@@ -6,9 +6,41 @@
           <th scope="col">Nome Brand</th>
           <th scope="col">Nome Prodotto</th>
           <th scope="col">Nome Richiedente</th>
-          <th scope="col">Data Richiesta</th>
+          <th scope="col">
+            <tr>
+              <td class="w-100 text-start">Data Richiesta</td>
+              <td @click="orderBy()">
+                <i v-if="this.asc === true" class="bi bi-caret-up-fill d-flex">
+                </i>
+                <i v-else class="bi bi-caret-up-fill d-flex notselected"> </i>
+
+                <i
+                  v-if="this.asc === false"
+                  class="bi bi-caret-down-fill d-flex"
+                ></i>
+                <i v-else class="bi bi-caret-down-fill d-flex notselected"> </i>
+              </td>
+            </tr>
+          </th>
         </tr>
       </thead>
+      <tbody class="text-start">
+        <tr>
+          <td colspan="4">
+            <select class="form-select-sm w-auto" @change="onChange($event)">
+              <option default value="">Tutti i brand</option>
+              <option
+                v-for="item in ListofBrands"
+                :key="item.id"
+                :value="item.id"
+              >
+                {{ item.name }}
+              </option>
+            </select>
+            <input type="text" v-model="productName" @keyup.enter="load()"/>
+          </td>
+        </tr>
+      </tbody>
       <tbody>
         <tr v-for="(item, index) in info.listOfElements" :key="index">
           <td>{{ item.brandName }}</td>
@@ -33,7 +65,8 @@
           class="page-link"
           v-if="
             (index <= pageNumber + 2 && index >= pageNumber - 2) ||
-            (index === info.totalPages || index === 1)
+            index === info.totalPages ||
+            index === 1
           "
           @click="selectedIndex(index)"
           >{{ index }}</a
@@ -52,6 +85,7 @@
 <script>
 import { RepositoryFactory } from "../services/repositoryFactory";
 const InforequestRepo = RepositoryFactory.get("inforequests");
+const BrandRepo = RepositoryFactory.get("brands");
 export default {
   data() {
     return {
@@ -59,6 +93,9 @@ export default {
       pageNumber: 1,
       pageSize: 10,
       asc: false,
+      ListofBrands: null,
+      brandId: 0,
+      productName: "",
     };
   },
   methods: {
@@ -66,8 +103,16 @@ export default {
       this.info = await InforequestRepo.getRequests(
         this.pageNumber,
         this.pageSize,
-        this.asc
+        this.asc,
+        this.brandId,
+        this.productName
       );
+      this.ListofBrands = await BrandRepo.getBrandsName();
+    },
+    async onChange(event) {
+      this.pageNumber = 1;
+      this.brandId = event.target.value;
+      await this.load();
     },
     async next() {
       if (this.pageNumber < this.info.totalPages) this.pageNumber++;
@@ -79,6 +124,10 @@ export default {
     },
     async selectedIndex(index) {
       this.pageNumber = index;
+      await this.load();
+    },
+    async orderBy() {
+      this.asc = !this.asc;
       await this.load();
     },
   },

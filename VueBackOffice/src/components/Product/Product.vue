@@ -1,5 +1,6 @@
 <template>
   <div v-if="info !== null">
+        <router-link to="/product/new" class="nav-link">Aggiungi Prodotto</router-link>
     <table class="table table-striped table-hover text-start">
       <thead>
         <tr>
@@ -67,11 +68,11 @@
             <select class="form-select-sm w-auto" @change="onChange($event)">
               <option default value="">Tutti i brand</option>
               <option
-                v-for="(item, index) in Listofnames"
-                :key="index"
-                :value="item"
+                v-for="item in ListofBrands"
+                :key="item.id"
+                :value="item.name"
               >
-                {{ item }}
+                {{ item.name }}
               </option>
             </select>
           </td>
@@ -137,7 +138,7 @@
 </template>
 
 <script>
-import { RepositoryFactory } from "../services/repositoryFactory";
+import { RepositoryFactory } from "../../services/repositoryFactory";
 const ProductRepo = RepositoryFactory.get("products");
 const BrandRepo = RepositoryFactory.get("brands");
 export default {
@@ -149,9 +150,9 @@ export default {
       pageSize: 10,
       orderProperty: 0,
       asc: true,
-      Listofnames: null,
+      ListofBrands: null,
       brandFilter: "",
-      listOfproperties: [],
+     
     };
   },
   computed: {
@@ -173,7 +174,7 @@ export default {
         this.asc,
         this.brandFilter
       );
-      this.Listofnames = await BrandRepo.getBrandsName();
+      this.ListofBrands = await BrandRepo.getBrandsName();
     },
     async next() {
       if (this.pageNumber < this.info.totalPages) this.pageNumber++;
@@ -209,14 +210,6 @@ export default {
 a {
   cursor: pointer;
 }
-.bi::before {
-  line-height: 0.75;
-}
-.bi {
-  line-height: 0.75;
-  cursor: pointer;
-}
-.notselected {
-  color: lightgray;
-}
+
+
 </style>

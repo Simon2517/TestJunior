@@ -11,12 +11,12 @@ namespace TestJunior.Services
         {
             _Requestrepo = _requestrepo;
         }
-        public PaginatedList<PaginatedRequest> ListOfRequest(int pagenumber, int pagesize,bool asc_desc)
+        public PaginatedList<PaginatedRequest> ListOfRequest(int pagenumber, int pagesize,bool asc_desc, int brandId, string search)
         {
             if (pagenumber <= 0 || pagesize <= 0)
                 return null;
-                
-                IQueryable<PaginatedRequest> Reqs = OrderedRequests(asc_desc)
+            
+                IQueryable<PaginatedRequest> Reqs = OrderedRequests(brandId, search,asc_desc)
                     .Select(reqs => new PaginatedRequest
                     {
                         Id=reqs.Id,
@@ -28,9 +28,9 @@ namespace TestJunior.Services
             return PaginatedList<PaginatedRequest>.Create(Reqs, pagenumber, pagesize);
         }
 
-        public IQueryable<InfoRequest> OrderedRequests(bool asc_desc=false)
+        public IQueryable<InfoRequest> OrderedRequests(int brandId, string search,bool asc_desc=false)
         {
-            var reqs = _Requestrepo.GetAll();
+            var reqs = SearchFilter(brandId, search);
             if (asc_desc)
                 return reqs.OrderBy(x => x.InsertedDate);
             else
@@ -66,6 +66,18 @@ namespace TestJunior.Services
                 })
                 .Where(info => info.Id == id);
             return InforequestDetail;
+        }
+
+        public IQueryable<InfoRequest> SearchFilter(int brandId, string search)
+        {
+            IQueryable<InfoRequest> requests= _Requestrepo.GetAll();
+            if (brandId!=0)
+                requests = requests.Where(reqs => reqs.Product.Brand.Id == brandId);
+            if (!string.IsNullOrEmpty(search))
+                requests = requests.Where(reqs => reqs.Product.Brand.BrandName.ToLower().Contains(search.ToString()));
+            return requests;
+
+
         }
     }
 }

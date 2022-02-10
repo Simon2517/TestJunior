@@ -20,4 +20,9 @@ namespace TestJunior.DetailedEntities
         public int NumberOfUserRequest { get; set; }
         public IEnumerable<PolishedInfoRequest> Requests { get; set; } = new List<PolishedInfoRequest>();
     }
+    public class APIProductWithCategories
+    {
+        public Product Product { get; set; }
+        public List<int> categoriesSelected { get; set; }= new List<int>();
+    }
 }

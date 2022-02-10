@@ -60,4 +60,14 @@ export default {
 .view {
   height: 100vh;
 }
+.notselected {
+  color: lightgray;
+}
+.bi::before {
+  line-height: 0.75;
+}
+.bi {
+  line-height: 0.75;
+  cursor: pointer;
+}
 </style>

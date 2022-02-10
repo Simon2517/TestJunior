@@ -11,5 +11,6 @@ namespace TestJunior.Services
         public PaginatedList<PaginatedProduct> ListOfProducts(int pagenumber, int pagesize, int order, bool asc_desc, string brandName);
         public IQueryable<APIProductDetail> ProductDetail(int id);
         public Task<int> DeleteProductAsync(int id);
+        public int AddProduct(APIProductWithCategories product);
     }
 }

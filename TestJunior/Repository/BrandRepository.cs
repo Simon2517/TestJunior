@@ -10,15 +10,10 @@ namespace TestJunior.Repository
     public class BrandRepository : IRepository<Brand>
     {
         private DatabaseContext _ctx;
-        private IDbContextTransaction transaction;
-
-
-
 
         public BrandRepository(DatabaseContext ctx)
         {
             _ctx = ctx;
-            transaction = _ctx.Database.BeginTransaction();
 
         }
 
@@ -68,9 +63,10 @@ namespace TestJunior.Repository
         }
         public int add(Brand entity)
         {
-           
             entity.Account.AccountType = 2;
-            try{
+            IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
+            try
+            {
                 _ctx.Brand.Add(entity);
                 _ctx.SaveChanges();
                 transaction.Commit();

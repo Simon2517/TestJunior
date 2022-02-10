@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TestJunior.DetailedEntities;
 using TestJunior.Repository;
@@ -118,6 +119,18 @@ namespace TestJunior.Services
             else
              return await _Productrepo.deleteAsync(id);
             
+        }
+
+        public int AddProduct(APIProductWithCategories entity)
+        {
+            Product product = entity.Product;
+            List<ProductCategories> categories = new List<ProductCategories>();
+            foreach(var x in entity.categoriesSelected)
+            {
+                categories.Add(new ProductCategories {CategoryId=x,ProductId=entity.Product.ProductId });
+            }
+            product.ProdsCategories = categories;
+            return _Productrepo.add(product);
         }
     }
 }

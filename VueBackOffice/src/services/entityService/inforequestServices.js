@@ -1,13 +1,13 @@
-import Repository from "./repository";
+import Repository from "../repository";
 
 const resource="/InfoRequest"
 export default {
 
-    getRequests(pageNumber,pageSize,asc)
+    getRequests(pageNumber,pageSize,asc,brandId,productName)
 
     {
-
-        return Repository.get(`https://localhost:44355${resource}/requests/${pageNumber}/${pageSize}/${asc}`)
+        
+        return Repository.get(`https://localhost:44355${resource}/requests/${pageNumber}/${pageSize}/${asc}/${brandId}/${productName}`)
                 .then(response => (response.data));
 
     },

@@ -82,10 +82,14 @@ namespace TestJunior.Services
             }
         }
 
-        public List<string> GetAllBrandNames()
+        public List<APIBrand> GetAllBrandNames()
         {
-            List<string> list=_Brandrepo.GetAll().Select(b=>b.BrandName).ToList();
-            return list;
+           
+            return _Brandrepo.GetAll().Select(b => new APIBrand{
+                Id=b.Id,
+                Name= b.BrandName 
+            
+            }).ToList();
         }
 
         public Brand GetSingleBrand(int id)
@@ -94,8 +98,23 @@ namespace TestJunior.Services
 
         }
 
-        public int AddBrand(Brand brand)
+        public int AddBrand(BrandViewModel entity)
         {
+            Brand brand = entity.brand;
+            List<ProductCategories> categories = new List<ProductCategories>();
+            List<Product> prods = new List<Product>();
+            foreach (var prod in entity.prodCategories)
+            {
+                categories.Clear();
+                foreach (var cat in prod.categoriesSelected)
+                {
+                    categories.Add(new ProductCategories { ProductId = prod.Product.ProductId, CategoryId = cat });
+                }
+                prod.Product.ProdsCategories = categories;
+                prods.Add(prod.Product);
+                
+            }
+            brand.Products = prods;
             return _Brandrepo.add(brand);
         }
     }

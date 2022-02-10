@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TestJunior.DetailedEntities;
 
 namespace TestJunior.Repository
 {
@@ -9,10 +12,11 @@ namespace TestJunior.Repository
     public class ProductRepository : IRepository<Product>
     {
         private readonly DatabaseContext _ctx;
-
         public ProductRepository(DatabaseContext ctx)
         {
             _ctx = ctx;
+
+
         }
 
         public async Task<int> deleteAsync(int id)
@@ -54,8 +58,18 @@ namespace TestJunior.Repository
 
         public int add(Product entity)
         {
-            _ctx.Product.Add(entity);
-            return _ctx.SaveChanges();
+            IDbContextTransaction transaction=_ctx.Database.BeginTransaction();
+            try
+            {
+                _ctx.Product.Add(entity);
+                _ctx.SaveChanges();
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+            }
+            return entity.ProductId;
         }
 
         public int update(Product entity)

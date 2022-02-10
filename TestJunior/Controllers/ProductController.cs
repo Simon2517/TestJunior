@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TestJunior.DetailedEntities;
@@ -72,6 +73,15 @@ namespace TestJunior.Controllers
                 return Ok("item deleted successfully");
             else
                 return NotFound("item not found");
+        }
+
+        [HttpPost("new")]
+        public IActionResult AddProduct(APIProductWithCategories product)
+        {
+            if (_productServices.AddProduct(product) != 0)
+                return Ok();
+            else
+                return BadRequest("Errore nell'aggiunta");
         }
 
     }

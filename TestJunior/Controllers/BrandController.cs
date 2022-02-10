@@ -75,7 +75,7 @@ namespace TestJunior.Controllers
 
 
         [HttpPost("new")]
-        public IActionResult AddBrand(Brand brand)
+        public IActionResult AddBrand(BrandViewModel brand)
         {
             if (_brandServices.AddBrand(brand) != 0)
                 return Ok();

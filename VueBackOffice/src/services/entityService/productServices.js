@@ -1,4 +1,4 @@
-import Repository from "./repository";
+import Repository from "../repository";
 
 const resource="/Product"
 export default {
@@ -23,6 +23,12 @@ export default {
 
                 .then(response => (response))
 
+    },
+
+    addProduct(product){
+        console.log(product)
+        return Repository.post(`https://localhost:44355${resource}/new`,product)
+            .then(response=>(response.data))
     }
 
 }

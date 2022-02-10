@@ -58,14 +58,14 @@
 </template>
 
 <script>
-import { RepositoryFactory } from "../services/repositoryFactory";
+import { RepositoryFactory } from "../../services/repositoryFactory";
 const BrandRepo = RepositoryFactory.get("brands");
 export default {
   data() {
     return {
       info: null,
       pageNumber: 1,
-      pageSize: 20,
+      pageSize: 10,
       orderProperty: 0,
       asc: true,
     };
