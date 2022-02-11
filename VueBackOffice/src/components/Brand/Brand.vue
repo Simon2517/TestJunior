@@ -4,27 +4,36 @@
     <table class="table table-striped table-hover">
       <thead>
         <tr>
-          <th scope="col" class="text-end">
-            <tr>
-              <th class="w-100 text-start">Id</th>
-              <th>
-                <i class="bi bi-caret-up-fill d-flex"></i>
-                <i class="bi bi-caret-down-fill d-flex"></i>
-              </th>
-            </tr>
-          </th>
+          <th scope="col">Id</th>
           <th scope="col">Nome Brand</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, object, index) in info.listOfElements" :key="index">
+        <tr
+          v-for="(item, index) in info.listOfElements"
+          :key="index"
+          @click.stop="$router.push({ path: 'brand/detail/' + item.id })"
+        >
           <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
+          <td>{{ item.description }}</td>
+          <td>
+            <i
+              class="bi bi-pencil-square"
+              @click.stop="$router.push({ path: 'brand/' + item.id })"
+            ></i>
+          </td>
         </tr>
       </tbody>
     </table>
-
-    <ul class="pagination d-flex justify-content-center">
+    <Paging 
+    :pageNumber="pageNumber"
+    :pageSize="pageSize"
+    :totalPages="info.totalPages"
+    v-on:next="next"
+    v-on:previous="previous"
+    v-on:selectedIndex="selectedIndex"/>
+    <!-- <ul class="pagination d-flex justify-content-center">
       <li class="page-item" :class="this.pageNumber === 1 ? 'disabled' : ''">
         <a class="page-link" @click="previous()">Previous</a>
       </li>
@@ -53,14 +62,18 @@
       >
         <a class="page-link" @click="next()">Next</a>
       </li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 
 <script>
+import Paging from "../Paging/paging.vue"
 import { RepositoryFactory } from "../../services/repositoryFactory";
 const BrandRepo = RepositoryFactory.get("brands");
 export default {
+  components:{
+    Paging
+  },
   data() {
     return {
       info: null,
@@ -87,8 +100,8 @@ export default {
       if (this.pageNumber > 1) this.pageNumber--;
       await this.load();
     },
-    async selectedIndex(index) {
-      this.pageNumber = index;
+    async selectedIndex(page) {
+      this.pageNumber = page.index;
       await this.load();
     },
   },
@@ -101,9 +114,6 @@ export default {
 <style scoped>
 a {
   cursor: pointer;
-}
-.iconcolor {
-  color: red;
 }
 .bi::before {
   line-height: 0.75;

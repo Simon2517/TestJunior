@@ -74,8 +74,17 @@ namespace TestJunior.Repository
 
         public int update(Product entity)
         {
-            _ctx.Product.Update(entity);
-            return _ctx.SaveChanges();
+            IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
+            try
+            {
+                _ctx.Product.Update(entity);
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+            }
+            return entity.ProductId;
         }
     }
 }

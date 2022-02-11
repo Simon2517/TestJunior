@@ -1,6 +1,13 @@
 <template>
   <div v-if="info !== null">
-        <router-link to="/product/new" class="nav-link">Aggiungi Prodotto</router-link>
+    
+    <div class="text-end">
+      <button>
+        <router-link to="/product/new" class="nav-link"
+          >Aggiungi Prodotto</router-link
+        >
+      </button>
+    </div>
     <table class="table table-striped table-hover text-start">
       <thead>
         <tr>
@@ -64,7 +71,7 @@
       </thead>
       <tbody>
         <tr>
-          <td colspan="4">
+          <td colspan="100%">
             <select class="form-select-sm w-auto" @change="onChange($event)">
               <option default value="">Tutti i brand</option>
               <option
@@ -79,7 +86,7 @@
         </tr>
       </tbody>
       <tbody>
-        <tr v-for="(item, index) in info.listOfElements" :key="index">
+        <tr v-for="(item, index) in info.listOfElements" :key="index" @click.stop="$router.push({path:'product/detail/'+item.id})">
           <td class="w-25 align-middle">{{ item.brandName }}</td>
           <td class="w-25 align-middle">
             <span>{{ item.name }}</span
@@ -94,46 +101,24 @@
             >
           </td>
           <td class="w-25 align-middle">{{ item.price }}€</td>
+          <td>
+            <i
+              class="bi bi-pencil-square"
+              @click.stop="$router.push({ path: 'product/' + item.id })"
+            ></i>
+          </td>
         </tr>
       </tbody>
     </table>
 
-    <ul class="pagination d-flex justify-content-center">
-      <li class="page-item" :class="this.pageNumber === 1 ? 'disabled' : ''">
-        <a class="page-link" @click="previous()">Previous</a>
-      </li>
-      <li class="page-item" :class="pageNumber === 1 ? 'active' : ''">
-        <a class="page-link" @click="selectedIndex(1)"> 1 </a>
-      </li>
-      <li class="page-item">
-        <a v-if="pageNumber >= 5" class="page-link pe-none"> ... </a>
-      </li>
-      <li
-        class="page-item"
-        v-for="item in pages"
-        :key="item"
-        :class="pageNumber === item ? 'active' : ''"
-      >
-        <a class="page-link" @click="selectedIndex(item)">{{ item }}</a>
-      </li>
-      <li class="page-item">
-        <a v-if="pageNumber < pageNumber + 2" class="page-link pe-none"> ... </a>
-      </li>
-      <li
-        class="page-item"
-        :class="pageNumber === info.totalPages ? 'active' : ''"
-      >
-        <a class="page-link" @click="selectedIndex(info.totalPages)">
-          {{ info.totalPages }}
-        </a>
-      </li>
-      <li
-        class="page-item"
-        :class="this.pageNumber === this.info.totalPages ? 'disabled' : ''"
-      >
-        <a class="page-link" @click="next()">Next</a>
-      </li>
-    </ul>
+    <Paging 
+    :pageNumber="pageNumber"
+    :pageSize="pageSize"
+    :totalPages="info.totalPages"
+    v-on:next="next"
+    v-on:previous="previous"
+    v-on:selectedIndex="selectedIndex"/>
+
   </div>
 </template>
 
@@ -141,7 +126,11 @@
 import { RepositoryFactory } from "../../services/repositoryFactory";
 const ProductRepo = RepositoryFactory.get("products");
 const BrandRepo = RepositoryFactory.get("brands");
+import Paging from "../Paging/paging.vue"
 export default {
+    components:{
+    Paging
+  },
   data() {
     return {
       info: null,
@@ -152,15 +141,13 @@ export default {
       asc: true,
       ListofBrands: null,
       brandFilter: "",
-     
     };
   },
   computed: {
     pages() {
       let pages = [];
       for (let i = 2; i < this.info.totalPages; i++) {
-        if (i <= this.pageNumber + 2 && i >= this.pageNumber - 2) 
-          pages.push(i);
+        if (i <= this.pageNumber + 2 && i >= this.pageNumber - 2) pages.push(i);
       }
       return pages;
     },
@@ -174,7 +161,7 @@ export default {
         this.asc,
         this.brandFilter
       );
-      this.ListofBrands = await BrandRepo.getBrandsName();
+      
     },
     async next() {
       if (this.pageNumber < this.info.totalPages) this.pageNumber++;
@@ -184,8 +171,8 @@ export default {
       if (this.pageNumber > 1) this.pageNumber--;
       await this.load();
     },
-    async selectedIndex(index) {
-      this.pageNumber = index;
+    async selectedIndex(page) {
+      this.pageNumber = page.index;
       await this.load();
     },
     async onChange(event) {
@@ -202,6 +189,7 @@ export default {
   },
   async created() {
     await this.load();
+    this.ListofBrands = await BrandRepo.getBrandsName();
   },
 };
 </script>
@@ -210,6 +198,4 @@ export default {
 a {
   cursor: pointer;
 }
-
-
 </style>

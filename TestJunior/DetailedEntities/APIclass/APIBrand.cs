@@ -32,4 +32,13 @@ namespace TestJunior.DetailedEntities
         public Brand brand { get; set; }
         public List<APIProductWithCategories> prodCategories { get; set; }
     }
+
+    public class BrandUpdate
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
 }

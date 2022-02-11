@@ -30,11 +30,11 @@
             <select class="form-select-sm w-auto" @change="onChange($event)">
               <option default value="">Tutti i brand</option>
               <option
-                v-for="item in ListofBrands"
-                :key="item.id"
-                :value="item.id"
+                v-for="brand in ListofBrands"
+                :key="brand.id"
+                :value="brand.id"
               >
-                {{ item.name }}
+                {{ brand.name }}
               </option>
             </select>
             <input type="text" v-model="productName" @keyup.enter="load()"/>
@@ -42,7 +42,7 @@
         </tr>
       </tbody>
       <tbody>
-        <tr v-for="(item, index) in info.listOfElements" :key="index">
+        <tr v-for="(item, index) in info.listOfElements" :key="index" @click.stop="$router.push({path:'leed/detail/'+item.id})">
           <td>{{ item.brandName }}</td>
           <td>{{ item.productName }}</td>
           <td>{{ item.name }}</td>
@@ -51,42 +51,25 @@
       </tbody>
     </table>
 
-    <ul class="pagination d-flex justify-content-center">
-      <li class="page-item" :class="this.pageNumber === 1 ? 'disabled' : ''">
-        <a class="page-link" @click="previous()">Previous</a>
-      </li>
-      <li
-        class="page-item"
-        v-for="index in info.totalPages"
-        :key="index"
-        :class="pageNumber === index ? 'active' : ''"
-      >
-        <a
-          class="page-link"
-          v-if="
-            (index <= pageNumber + 2 && index >= pageNumber - 2) ||
-            index === info.totalPages ||
-            index === 1
-          "
-          @click="selectedIndex(index)"
-          >{{ index }}</a
-        >
-      </li>
-      <li
-        class="page-item"
-        :class="this.pageNumber === this.info.totalPages ? 'disabled' : ''"
-      >
-        <a class="page-link" @click="next()">Next</a>
-      </li>
-    </ul>
+    <Paging 
+    :pageNumber="pageNumber"
+    :pageSize="pageSize"
+    :totalPages="info.totalPages"
+    v-on:next="next"
+    v-on:previous="previous"
+    v-on:selectedIndex="selectedIndex"/>
   </div>
 </template>
 
 <script>
-import { RepositoryFactory } from "../services/repositoryFactory";
+import { RepositoryFactory } from "../../services/repositoryFactory";
 const InforequestRepo = RepositoryFactory.get("inforequests");
 const BrandRepo = RepositoryFactory.get("brands");
+import Paging from "../Paging/paging.vue"
 export default {
+    components:{
+    Paging
+  },
   data() {
     return {
       info: null,
@@ -122,8 +105,8 @@ export default {
       if (this.pageNumber > 1) this.pageNumber--;
       await this.load();
     },
-    async selectedIndex(index) {
-      this.pageNumber = index;
+    async selectedIndex(page) {
+      this.pageNumber = page.index;
       await this.load();
     },
     async orderBy() {

@@ -8,12 +8,12 @@
           <input class="form-control" type="text" v-model="formData.Name" />
         </div>
         <div>
-          <label class="form-label" for="Email">Prezzo</label>
-          <input class="form-control" type="text" v-model="formData.Price" />
+          <label class="form-label" for="Price">Prezzo</label>
+          <input class="form-control" type="number" step=".01" v-model.number="formData.Price" />
         </div>
         <div>
-          <select class="form-select-sm w-auto" v-model="formData.Brand.Id">
-            <option default>Tutti i brand</option>
+          <select class="form-select-sm w-auto" v-model="formData.BrandId">
+            <option :value="0">Tutti i brand</option>
             <option
               v-for="brand in ListofBrands"
               :key="brand.id"
@@ -53,15 +53,15 @@ export default {
   name: "CreatePost",
   data() {
     return {
+      info:null,
       ProductId: null,
       Categories: null,
       formData: {
         Name: "",
         Price: 0,
-        Brand: { Id: 0, Name: "" },
+        BrandId: 0
       },
       ProdsCategories: [],
-      BrandName:'',
       ListofBrands: null,
     };
   },
@@ -71,13 +71,23 @@ export default {
         Product: this.formData,
         categoriesSelected: this.ProdsCategories,
       };
-      this.ProductId = await ProductRepo.addProduct(product);
+      if(this.info==null)
+         this.ProductId = await ProductRepo.addProduct(product);
+      else
+         await ProductRepo.updateProduct(product);
     },
-
   },
   async created() {
+    
     this.Categories = await CatRepo.getCategories();
     this.ListofBrands = await BrandRepo.getBrandsName();
+    this.info=await ProductRepo.getProductById(this.$route.params.id);
+    if(this.info!=null){
+      this.formData.Name=this.info.product.name;
+      this.formData.Price=this.info.product.price;
+      this.formData.BrandId=this.info.product.brandId;
+      this.ProdsCategories=this.info.categoriesSelected;
+      }
   },
 };
 </script>

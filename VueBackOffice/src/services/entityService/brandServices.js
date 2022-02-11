@@ -29,13 +29,21 @@ export default {
 
         return Repository.get("https://localhost:44355/Brand/detail/"+id)
 
-                .then(response => (response))
+                .then(response => (response.data))
 
     },
     addBrand(brand){
         console.log(brand)
         return Repository.post(`https://localhost:44355${resource}/new`,brand)
             .then(response=>(response.data))
+    },
+    getBrandById(id){
+        return Repository.get(`https://localhost:44355${resource}/${id}`)
+            .then(response=>(response.data))
+
+    },
+    updateBrand(brand){
+        return Repository.put(`https://localhost:44355${resource}/update`,brand)
     }
 
 }

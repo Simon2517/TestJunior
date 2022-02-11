@@ -1,7 +1,7 @@
 <template>
-  <div id="app" >
-    <div class="container-fluid">
-      <div class="row bg-dark text-white text-start shadow" >
+  <div id="app">
+    <div class="container-fluid" v-bind:class="'view'">
+      <div class="row bg-dark text-white text-start shadow">
         <div class="col">
           <h3>Company Name</h3>
         </div>
@@ -9,10 +9,13 @@
 
       <div class="row">
         <div class="col">
-          <div class="container-fluid p-0 ">
+          <div class="container-fluid p-0">
             <div class="row">
               <div class="col-2 bg-light">
-                <ul class="nav flex-column bg-light text-start" v-bind:class="'view'">
+                <ul
+                  class="nav flex-column bg-light text-start"
+                  v-bind:class="'view'"
+                >
                   <li class="nav-item">
                     <router-link to="/brands" class="nav-link"
                       >Brands</router-link

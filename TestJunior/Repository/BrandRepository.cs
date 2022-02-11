@@ -63,7 +63,6 @@ namespace TestJunior.Repository
         }
         public int add(Brand entity)
         {
-            entity.Account.AccountType = 2;
             IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
             try
             {
@@ -82,9 +81,17 @@ namespace TestJunior.Repository
 
         public int update(Brand entity)
         {
-            _ctx.Brand.Update(entity);
-            return _ctx.SaveChanges();
-
+            IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
+            try
+            {
+                _ctx.Brand.Update(entity);
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+            }
+            return entity.Id;
         }
     }
 }

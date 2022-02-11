@@ -132,5 +132,29 @@ namespace TestJunior.Services
             product.ProdsCategories = categories;
             return _Productrepo.add(product);
         }
+
+        public APIProductWithCategories GetSingleProduct(int id)
+        {
+            var product = _Productrepo.GetById(id);
+            var categories = product.SelectMany(x=>x.ProdsCategories.Select(x=>x.CategoryId)).ToList();
+            var productViewModel = new APIProductWithCategories()
+            {
+                Product = product.FirstOrDefault(),
+                categoriesSelected = categories
+            };
+            return productViewModel;
+
+        }
+
+        public int UpdateProduct(APIProductWithCategories product)
+        {
+            List<ProductCategories> categories=new List<ProductCategories>();
+            foreach (var x in product.categoriesSelected)
+            {
+                categories.Add(new ProductCategories { CategoryId = x, ProductId = product.Product.ProductId });
+            }
+            product.Product.ProdsCategories = categories;
+            return _Productrepo.update(product.Product);
+        }
     }
 }

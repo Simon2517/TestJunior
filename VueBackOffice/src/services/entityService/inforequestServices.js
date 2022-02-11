@@ -18,9 +18,9 @@ export default {
 
     {
 
-        return Repository.get(`${resource}/${id}`)
+        return Repository.get(`${resource}/detail/${id}`)
 
-                .then(response => (response))
+                .then(response => (response.data))
 
     }
 

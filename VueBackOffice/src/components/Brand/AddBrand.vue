@@ -88,6 +88,7 @@ export default {
     async createPost() {
       let brand={brand:this.formData,prodCategories:this.formData.Products}
       this.BrandId = await BrandRepo.addBrand(brand);
+      this.$router.push({path:'detail/'+this.BrandId})
     },
     addProduct() {
       this.formData.Products.push({Product:{Name:'',Price:0},categoriesSelected:[]});

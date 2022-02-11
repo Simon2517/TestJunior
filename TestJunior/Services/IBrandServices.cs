@@ -11,5 +11,7 @@ namespace TestJunior.Services
         public IQueryable<APIBrandDetail> BrandDetail(int id);
         public List<APIBrand> GetAllBrandNames();
         public int AddBrand(BrandViewModel brand);
+        public int UpdateBrand(Brand brand);
+        public Brand GetSingleBrand(int id);
     }
 }

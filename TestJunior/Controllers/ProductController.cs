@@ -75,10 +75,25 @@ namespace TestJunior.Controllers
                 return NotFound("item not found");
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetProductWithCategories(int id)
+        {
+            return Ok(_productServices.GetSingleProduct(id));
+        }
+
         [HttpPost("new")]
         public IActionResult AddProduct(APIProductWithCategories product)
         {
             if (_productServices.AddProduct(product) != 0)
+                return Ok();
+            else
+                return BadRequest("Errore nell'aggiunta");
+        }
+
+        [HttpPut("update")]
+        public IActionResult UpdateProduct(APIProductWithCategories product)
+        {
+            if (_productServices.UpdateProduct(product) != 0)
                 return Ok();
             else
                 return BadRequest("Errore nell'aggiunta");

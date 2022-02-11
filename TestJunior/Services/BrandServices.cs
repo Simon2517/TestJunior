@@ -94,7 +94,20 @@ namespace TestJunior.Services
 
         public Brand GetSingleBrand(int id)
         {
-            return _Brandrepo.GetById(id).FirstOrDefault();
+            var brand = _Brandrepo.GetById(id).Select(b=>new Brand
+            {
+                Id=b.Id,
+                BrandName=b.BrandName,
+                Description=b.Description,
+                Account=new Account {
+                    Id=b.AccountId,
+                    Email=b.Account.Email,
+                    Password=b.Account.Password,
+                    AccountType=b.Account.AccountType,
+                }
+            }).FirstOrDefault();
+            
+            return brand;
 
         }
 
@@ -103,10 +116,10 @@ namespace TestJunior.Services
             Brand brand = entity.brand;
             List<ProductCategories> categories = new List<ProductCategories>();
             List<Product> prods = new List<Product>();
-            foreach (var prod in entity.prodCategories)
+            foreach (APIProductWithCategories prod in entity.prodCategories)
             {
                 categories.Clear();
-                foreach (var cat in prod.categoriesSelected)
+                foreach (int cat in prod.categoriesSelected)
                 {
                     categories.Add(new ProductCategories { ProductId = prod.Product.ProductId, CategoryId = cat });
                 }
@@ -115,7 +128,13 @@ namespace TestJunior.Services
                 
             }
             brand.Products = prods;
+            brand.Account.AccountType = 2;
             return _Brandrepo.add(brand);
+        }
+
+        public int UpdateBrand(Brand brand)
+        {
+            return _Brandrepo.update(brand);
         }
     }
 }

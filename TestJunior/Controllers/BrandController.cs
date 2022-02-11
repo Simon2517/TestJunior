@@ -67,11 +67,19 @@ namespace TestJunior.Controllers
         }
 
 
-        [HttpGet("edit/{id}")]
-        public IActionResult EditBrand(int id)
+        [HttpGet("{id}")]
+        public IActionResult GetBrandById(int id)
         {
-            return Ok();
+
+            return Ok(_brandServices.GetSingleBrand(id));
         }
+
+        [HttpPut("update")]
+        public IActionResult EditBrand(Brand brand)
+        {
+            return Ok(_brandServices.UpdateBrand(brand));
+        }
+
 
 
         [HttpPost("new")]
