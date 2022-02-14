@@ -39,6 +39,9 @@ export default {
     },
     updateProduct(product){
         return Repository.put(`https://localhost:44355${resource}/update`,product)
+    },
+    deleteProduct(id){
+        return Repository.delete(`https://localhost:44355${resource}/delete/${id}`)
     }
 
 }

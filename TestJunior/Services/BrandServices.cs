@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TestJunior.DetailedEntities;
 using TestJunior.Repository;
 
@@ -14,11 +15,11 @@ namespace TestJunior.Services
             _Brandrepo = brandrepo;
             _Productrepo = _productrepo;
         }
-        public PaginatedList<PaginatedBrand> ListOfBrands(int pagenumber, int pagesize, int order, bool asc_desc)
+        public PaginatedList<PaginatedBrand> ListOfBrands(int pagenumber, int pagesize, string search)
         {
             if (pagenumber <= 0 || pagesize <= 0)
                 return null;
-            IQueryable<PaginatedBrand> Brands = OrderedBrands(order,asc_desc)
+            IQueryable<PaginatedBrand> Brands = FilterBrands(search)
                     .Select(brand => new PaginatedBrand
                     {
                         Id = brand.Id,
@@ -63,23 +64,14 @@ namespace TestJunior.Services
             return Brands;
             }
 
-        public IQueryable<Brand> OrderedBrands(int order, bool asc_desc)
+        public IQueryable<Brand> FilterBrands(string search)
         {
+            string _search=search ?? "";
             var prods = _Brandrepo.GetAll();
-            switch (order)
-            {
-                case 1:
-                    if (asc_desc)
-                        return prods.OrderBy(x => x.BrandName);
-                    else
-                        return prods.OrderByDescending(x => x.BrandName);
-                default:
-                    if (asc_desc)
-                        return prods.OrderBy(x => x.Id);
-                    else
-                        return prods.OrderByDescending(x => x.Id);
-
-            }
+            if(string.IsNullOrEmpty(search))
+                return prods;
+            else
+                return prods.Where(b=>b.BrandName.ToLower().Contains(_search.ToLower()));
         }
 
         public List<APIBrand> GetAllBrandNames()
@@ -135,6 +127,15 @@ namespace TestJunior.Services
         public int UpdateBrand(Brand brand)
         {
             return _Brandrepo.update(brand);
+        }
+
+        public async Task<int> DeleteBrandAsync(int id)
+        {
+            if (id <= 0)
+                return 0;
+            else
+                return await _Brandrepo.deleteAsync(id);
+
         }
     }
 }

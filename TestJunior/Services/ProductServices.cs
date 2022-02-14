@@ -88,8 +88,8 @@ namespace TestJunior.Services
                 {
                     ProductId = prod.ProductId,
                     ProductName = prod.Name,
-
-                    Catagories = prod.ProdsCategories.Select(prodCat => new APICategory
+                    BrandName=prod.Brand.BrandName,
+                    Categories = prod.ProdsCategories.Select(prodCat => new APICategory
                     {
                         Id = prodCat.CategoryId,
                         Name = prodCat.Category.Name

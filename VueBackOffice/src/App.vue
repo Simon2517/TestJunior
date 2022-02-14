@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <div class="container-fluid" v-bind:class="'view'">
-      <div class="row bg-dark text-white text-start shadow">
+    <div class="container-fluid">
+      <div class="row bg-dark text-white text-start shadow" >
         <div class="col">
           <h3>Company Name</h3>
         </div>
@@ -13,7 +13,7 @@
             <div class="row">
               <div class="col-2 bg-light">
                 <ul
-                  class="nav flex-column bg-light text-start"
+                  class="nav flex-column bg-light text-start mt-5"
                   v-bind:class="'view'"
                 >
                   <li class="nav-item">
@@ -56,7 +56,6 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   height: 100%;
 }
@@ -73,4 +72,21 @@ export default {
   line-height: 0.75;
   cursor: pointer;
 }
+.detail{
+  cursor: pointer;
+}
+.bi-trash3-fill{
+  color:red
+}.bi-pencil-square{
+  color: orange;
+}
+.nav-link{
+  color: #2c3e50;
+}
+a.router-link-exact-active {
+  font-weight: bold;  
+  color: blue;
+   
+}
+
 </style>

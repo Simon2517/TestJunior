@@ -21,29 +21,34 @@ namespace TestJunior.Repository
 
         public async Task<int> deleteAsync(int id)
         {
-
-            var product = _ctx.Product.FirstOrDefault(x => x.ProductId == id);
-            if (product != null)
+            int result = 0;
+            IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
+            try
             {
+                var product = _ctx.Product.FirstOrDefault(x => x.ProductId == id);
                 product.isDeleted = true;
-                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE ProductCategories
-                                                     SET isDeleted=1
-                                                     WHERE ProductId= " + id);
 
-                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE InfoRequest
-                                                     SET isDeleted=1
-                                                     FROM InfoRequest infoRequest join Product p On infoRequest.ProductId=p.ProductId
-                                                     WHERE  p.ProductId=" + id);
+                await _ctx.ProductCategories
+                        .Where(pc => pc.ProductId == id)
+                        .UpdateFromQueryAsync(x => new ProductCategories { isDeleted = true });
 
-                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE InfoRequestReply
-                                                     SET isDeleted=1
-                                                     FROM InfoRequestReply infoReply 
-                                                        join InfoRequest infoRequest on infoReply.InforequestId=infoRequest.Id
-                                                        join Product p On infoRequest.ProductId=p.ProductId
-                                                     WHERE  p.ProductId=" + id);
+                await _ctx.InfoRequest
+                        .Where(info => info.ProductId == id)
+                        .UpdateFromQueryAsync(x => new InfoRequest { isDeleted = true });
+
+                await _ctx.InfoRequestReply
+                        .Where(reply => reply.InfoRequest.ProductId == id)
+                            .UpdateFromQueryAsync(x => new InfoRequestReply { isDeleted = true });
+
+                _ctx.Update(product);
+                result=_ctx.SaveChanges();
+                transaction.Commit();
             }
-
-            return _ctx.SaveChanges();
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+            }
+            return result ;
         }
 
         public IQueryable<Product> GetAll()

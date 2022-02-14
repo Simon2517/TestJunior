@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace TestJunior.Repository
 {
@@ -19,36 +20,38 @@ namespace TestJunior.Repository
 
         public async Task<int> deleteAsync(int id)
         {
-            var brand = _ctx.Brand.FirstOrDefault(x => x.Id == id);
-            if (brand != null)
+            int result = 0;
+            IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
+            try
             {
+                var brand = _ctx.Brand.FirstOrDefault(x => x.Id == id);
                 brand.isDeleted = true;
 
-                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE Product
-                                                         SET isDeleted=1
-                                                         WHERE BrandId= " + id);
+                await _ctx.Product
+                        .Where(p => p.BrandId == id)
+                        .UpdateFromQueryAsync(x =>new Product { isDeleted=true});
 
-                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE ProductCategories
-                                                         SET isDeleted=1
-                                                         FROM ProductCategories prodCat 
-                                                            join Product p on p.ProductId=prodCat.ProductId
-                                                         WHERE p.BrandId= " + id);
+                await _ctx.ProductCategories
+                        .Where(pc => pc.Product.BrandId == id)
+                        .UpdateFromQueryAsync(x => new ProductCategories { isDeleted = true });
 
-                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE InfoRequest
-                                                         SET isDeleted=1
-                                                         FROM InfoRequest infoRequest 
-                                                            join Product p On infoRequest.ProductId=p.ProductId
-                                                         WHERE  p.BrandId=" + id);
+                await _ctx.InfoRequest
+                        .Where(info => info.Product.ProductId == id)
+                        .UpdateFromQueryAsync(x => new InfoRequest { isDeleted = true });
 
-                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE InfoRequestReply
-                                                         SET isDeleted=1
-                                                         FROM InfoRequestReply infoReply 
-                                                            join InfoRequest infoRequest on infoReply.InforequestId=infoRequest.Id
-                                                            join Product p On infoRequest.ProductId=p.ProductId
-                                                         WHERE  p.BrandId=" + id);
+                await _ctx.InfoRequestReply
+                        .Where(reply => reply.InfoRequest.Product.BrandId == id)
+                            .UpdateFromQueryAsync(x => new InfoRequestReply { isDeleted = true });
+
+                _ctx.Update(brand);
+                result = _ctx.SaveChanges();
+                transaction.Commit();
             }
-
-            return _ctx.SaveChanges();
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+            }
+            return result;
         }
 
         public IQueryable<Brand> GetAll()

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using TestJunior.DetailedEntities;
 using TestJunior.Repository;
 
@@ -11,12 +12,12 @@ namespace TestJunior.Services
         {
             _Requestrepo = _requestrepo;
         }
-        public PaginatedList<PaginatedRequest> ListOfRequest(int pagenumber, int pagesize,bool asc_desc, int brandId, string search)
+        public PaginatedList<PaginatedRequest> ListOfRequest(int pagenumber, int pagesize,bool asc_desc, int brandId, int productId, string search)
         {
             if (pagenumber <= 0 || pagesize <= 0)
                 return null;
             
-                IQueryable<PaginatedRequest> Reqs = OrderedRequests(brandId, search,asc_desc)
+                IQueryable<PaginatedRequest> Reqs = OrderedRequests(brandId, productId, search,asc_desc)
                     .Select(reqs => new PaginatedRequest
                     {
                         Id=reqs.Id,
@@ -28,15 +29,13 @@ namespace TestJunior.Services
             return PaginatedList<PaginatedRequest>.Create(Reqs, pagenumber, pagesize);
         }
 
-        public IQueryable<InfoRequest> OrderedRequests(int brandId, string search,bool asc_desc=false)
+        public IQueryable<InfoRequest> OrderedRequests(int brandId, int productId, string search,bool asc_desc=false)
         {
-            var reqs = SearchFilter(brandId, search);
+            var reqs = SearchFilter(brandId, productId, search);
             if (asc_desc)
                 return reqs.OrderBy(x => x.InsertedDate);
             else
                 return reqs.OrderByDescending(x => x.InsertedDate);
-            
-
         }
 
         public IQueryable<APIRequestDetail> RequestDetail(int id)
@@ -49,6 +48,7 @@ namespace TestJunior.Services
                     Name = info.Name + " " + info.LastName,
                     Email = info.Email,
                     Address = info.City + "(" + info.PostalCode + ")," + info.Nation.Name,
+                    RequestText = info.RequestText,
                     Product = new PolishedProduct
                     {
                         ProductId = info.ProductId,
@@ -60,7 +60,8 @@ namespace TestJunior.Services
                     {
                         Id = rep.Id,
                         Name = rep.Account.AccountType == 1 ? info.Product.Brand.BrandName : info.Name + " " + info.LastName,
-                        ReplyText = rep.ReplyText
+                        ReplyText = rep.ReplyText,
+                        InsertedDate=rep.InsertedDate,
                     }),
 
                 })
@@ -68,16 +69,18 @@ namespace TestJunior.Services
             return InforequestDetail;
         }
 
-        public IQueryable<InfoRequest> SearchFilter(int brandId, string search)
+        public IQueryable<InfoRequest> SearchFilter(int brandId,int productId, string search)
         {
+            string _search = search ?? "";
             IQueryable<InfoRequest> requests= _Requestrepo.GetAll();
             if (brandId!=0)
                 requests = requests.Where(reqs => reqs.Product.Brand.Id == brandId);
-            if (!string.IsNullOrEmpty(search))
-                requests = requests.Where(reqs => reqs.Product.Brand.BrandName.ToLower().Contains(search.ToString()));
+            if (!string.IsNullOrEmpty(_search))
+                requests = requests.Where(reqs => reqs.Product.Name.ToLower().Contains(_search.ToLower()));
+            if (productId != 0)
+                requests = requests.Where(reqs => reqs.ProductId == productId);
+           var x= requests.ToList();
             return requests;
-
-
         }
     }
 }

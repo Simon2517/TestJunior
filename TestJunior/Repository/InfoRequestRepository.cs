@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,17 +24,26 @@ namespace TestJunior.Repository
 
         public async Task<int> deleteAsync(int id)
         {
-            var inforequest = _ctx.InfoRequest.FirstOrDefault(x => x.Id == id);
-            if (inforequest != null)
+            int result = 0;
+            IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
+            try
             {
+                var inforequest = _ctx.Product.FirstOrDefault(x => x.ProductId == id);
                 inforequest.isDeleted = true;
 
-                await _ctx.Database.ExecuteSqlRawAsync(@"UPDATE InfoRequestReply
-                                                         SET isDeleted=1
-                                                         WHERE  InfoRequestId=" + id);
-            }
+                await _ctx.InfoRequestReply
+                        .Where(reply => reply.InfoRequestId == id)
+                            .UpdateFromQueryAsync(x => new InfoRequestReply { isDeleted = true });
 
-            return _ctx.SaveChanges();
+                _ctx.Update(inforequest);
+                result = _ctx.SaveChanges();
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+            }
+            return result;
         }
 
         public IQueryable<InfoRequest> GetAll()

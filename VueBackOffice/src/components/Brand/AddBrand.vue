@@ -1,64 +1,115 @@
 <template>
   <div>
-    Aggiungi Brand
     <div class="col-8 offset-2">
-      <form @submit.prevent="createPost()" class="text-start">
-        <div>
-          <label class="form-label" for="BrandName">Brand Name</label>
+      <div class="fs-3 my-5">Aggiungi Brand</div>
+      <form @submit.prevent="createPost()" class="text-start form-group">
+        <div class="mb-3">
           <input
+            placeholder="Brand Name"
+            maxlength="200"
             class="form-control"
             type="text"
             v-model="formData.BrandName"
           />
         </div>
-        <div>
-          <label class="form-label" for="Email">Email</label>
-          <input
+        <div class="mb-3">
+          <textarea
+            placeholder="Description"
             class="form-control"
-            type="text"
+            rows="5"
+            maxlength="200"
+            type="textarea"
+            v-model="formData.Description"
+          />
+        </div>
+        <div class="mb-3">
+          <input
+            placeholder="Email"
+            class="form-control"
+            maxlength="200"
+            type="email"
             v-model="formData.Account.Email"
           />
         </div>
-        <div>
+        <div class="mb-3">
           <label class="form-label" for="Password">Password</label>
           <input
+            placeholder="Password"
+            maxlength="200"
             class="form-control"
-            type="text"
+            type="password"
             v-model="formData.Account.Password"
           />
         </div>
-        <div class="text-end">
-          <button @click.prevent="addProduct()">add product</button>
-        </div>
-        <div v-for="(item, index) in formData.Products" :key="index">
-          <div>
-            <label class="form-label" for="Name">ProductName</label>
-            <input class="form-control" type="text" v-model="item.Product.Name" />
+        <div class="d-table w-100 mb-2">
+          <div class="d-table-cell align-bottom">
+            <span class="fs-2">Prodotti </span>
           </div>
-          <div>
+          <div class="d-table-cell text-end align-bottom">
+            <button
+              class="btn btn-primary btn-sm ms-2"
+              @click.prevent="addProduct()"
+            >
+              Aggiungi Prodotto
+            </button>
+          </div>
+        </div>
+        <div
+          class="mb-4"
+          v-for="(item, index) in formData.Products"
+          :key="index"
+        >
+          <div class="d-table w-100 my-3">
+            <div class="d-table-cell align-bottom">
+              <span class="text-primary">Prodotto #{{ index + 1 }}</span>
+            </div>
+            <div class="d-table-cell text-end align-bottom">
+              <button
+                class="btn btn-danger btn-sm ms-2"
+                @click.prevent="formData.Products.splice(index, 1)"
+              >
+                <i class="bi bi-file-x-fill"></i>
+              </button>
+            </div>
+          </div>
+          <div class="mb-2">
+            <input
+              placeholder="Product Name"
+              class="form-control"
+              maxlength="200"
+              type="text"
+              v-model="item.Product.Name"
+            />
+          </div>
+          <div class="mb-3">
             <label class="form-label" for="Price">Price</label>
             <input
+              step=".01"
               class="form-control"
               type="number"
               v-model.number="item.Product.Price"
             />
           </div>
+          <div class="row m-0">
+
+          
           <div
-            class="d-inline-flex form-check"
+            class="col-3 form-check"
             v-for="cat in Categories"
             :key="cat.id"
           >
             <input
-              class="form-check-input"
+              class="form-check-input me-1"
               type="checkbox"
               :value="cat.id"
               v-model="item.categoriesSelected"
             />
-            <label for="">{{ cat.name }}</label>
+            <label>{{ cat.name }}</label>
+          </div>
           </div>
         </div>
-        <div class="text-center">
-        <button>create post</button>
+        <div class="text-center my-5">
+          <button class="btn btn-primary">create post</button>
         </div>
       </form>
     </div>
@@ -80,23 +131,38 @@ export default {
         Account: { Email: "", Password: "" },
         Products: [],
       },
-
-      
     };
   },
   methods: {
     async createPost() {
-      let brand={brand:this.formData,prodCategories:this.formData.Products}
+      let brand = {
+        brand: this.formData,
+        prodCategories: this.formData.Products,
+      };
       this.BrandId = await BrandRepo.addBrand(brand);
-      this.$router.push({path:'detail/'+this.BrandId})
+      this.$router.push({ path: "detail/" + this.BrandId });
     },
     addProduct() {
-      this.formData.Products.push({Product:{Name:'',Price:0},categoriesSelected:[]});
-      
-    }
+      this.formData.Products.push({
+        Product: { Name: "", Price: 0 },
+        categoriesSelected: [],
+      });
+    },
   },
   async created() {
     this.Categories = await CatRepo.getCategories();
   },
 };
 </script>
+
+<style scoped>
+textarea {
+  resize: none;
+}
+.form-control {
+  background: lightgray;
+}
+input[type="checkbox"] {
+  box-shadow: inset 0 2px 5px #ddd;
+}
+</style>

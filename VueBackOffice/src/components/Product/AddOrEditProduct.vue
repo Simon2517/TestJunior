@@ -1,19 +1,20 @@
 <template>
   <div>
-    Aggiungi Prodotto
+   
     <div class="col-8 offset-2">
-      <form @submit.prevent="createPost()" class="text-start">
-        <div>
-          <label class="form-label" for="BrandName">Product Name</label>
-          <input class="form-control" type="text" v-model="formData.Name" />
+      <div class="fs-3 my-5">Aggiungi Prodotto</div>
+      <form @submit.prevent="createPost()" class="text-start form-group">
+        <div class="mb-3">
+          
+          <input placeholder="Product Name" class="form-control" type="text" v-model="formData.Name" required />
         </div>
-        <div>
-          <label class="form-label" for="Price">Prezzo</label>
+        <div class="mb-3">
+          <label class="form-label" for="Price">Price</label>
           <input class="form-control" type="number" step=".01" v-model.number="formData.Price" />
         </div>
         <div>
-          <select class="form-select-sm w-auto" v-model="formData.BrandId">
-            <option :value="0">Tutti i brand</option>
+          <select class="form-select-sm w-auto mb-4" v-model="formData.BrandId" required>
+            <option default :value="''">Tutti i brand</option>
             <option
               v-for="brand in ListofBrands"
               :key="brand.id"
@@ -23,21 +24,25 @@
             </option>
           </select>
         </div>
+        <div class="row m-0">
+
+        
         <div
-          class="d-inline-flex form-check"
+          class=" form-check col-3"
           v-for="item in Categories"
           :key="item.id"
         >
           <input
-            class="form-check-input"
+            class="form-check-input me-1"
             type="checkbox"
             :value="item.id"
             v-model="ProdsCategories"
           />
           <label for="">{{ item.name }}</label>
         </div>
+        </div>
         <div class="text-center">
-          <button>create post</button>
+          <button class="btn btn-primary mt-4">create post</button>
         </div>
       </form>
     </div>
@@ -59,7 +64,7 @@ export default {
       formData: {
         Name: "",
         Price: 0,
-        BrandId: 0
+        BrandId: ''
       },
       ProdsCategories: [],
       ListofBrands: null,
@@ -91,3 +96,15 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+textarea {
+  resize: none;
+}
+.form-control {
+  background: lightgray;
+}
+input[type="checkbox"] {
+  box-shadow: inset 0 2px 5px #ddd;
+}
+</style>

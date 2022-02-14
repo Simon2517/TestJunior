@@ -1,13 +1,16 @@
 <template>
   <div>
-    Update Brand
+    
     <div class="col-8 offset-2">
+      <div class="fs-3 my-5">Modifica Brand</div>
       <form @submit.prevent="createPost()" class="text-start">
         <div>
-          <label class="form-label" for="BrandName">Brand Name</label>
+          <label class="form-label" for="Email">Brand Name</label>
           <input
             class="form-control"
+            placeholder="Brand Name"
             type="text"
+            maxlength="200"
             v-model="formData.BrandName"
           />
         </div>
@@ -15,7 +18,9 @@
           <label class="form-label" for="Email">Email</label>
           <input
             class="form-control"
-            type="text"
+            placeholder="Email"
+            maxlength="200"
+            type="email"
             v-model="formData.Account.email"
           />
         </div>
@@ -23,12 +28,14 @@
           <label class="form-label" for="Password">Password</label>
           <input
             class="form-control"
-            type="text"
+            placeholder="Password"
+            maxlength="200"
+            type="password"
             v-model="formData.Account.password"
           />
         </div>
-        <div class="text-center">
-          <button>create post</button>
+        <div class="text-center my-4">
+          <button class="btn btn-primary">create post</button>
         </div>
       </form>
     </div>
@@ -66,3 +73,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+textarea {
+  resize: none;
+}
+.form-control {
+  background: lightgray;
+}
+</style>

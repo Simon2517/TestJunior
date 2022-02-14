@@ -1,13 +1,21 @@
 <template>
-  <div v-if="info !== null">
-    
-    <div class="text-end">
-      <button>
-        <router-link to="/product/new" class="nav-link"
-          >Aggiungi Prodotto</router-link
+  <div v-if="info !== null" class="mt-5">
+    <div class="d-table w-100">
+      <div class="d-table-cell align-bottom">
+        <span class="fs-2">Prodotti </span>
+      </div>
+      <div class="d-table-cell text-end">
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          @click.stop="$router.push({ path: 'product/new' })"
         >
-      </button>
+          Aggiungi Prodotto
+        </button>
+      </div>
     </div>
+    <hr class="m-0 my-1" />
+
     <table class="table table-striped table-hover text-start">
       <thead>
         <tr>
@@ -31,7 +39,7 @@
           </th>
           <th scope="col">
             <tr>
-              <td class="w-100 text-start">Nome Prodotto</td>
+              <td class="w-100 text-start text-center">Nome Prodotto</td>
               <td @click="orderby(2)">
                 <i
                   v-if="this.asc === true && this.orderProperty === 2"
@@ -47,10 +55,10 @@
               </td>
             </tr>
           </th>
-          <th scope="col">Categorie</th>
+          <th scope="col" class="text-center">Categorie</th>
           <th scope="col">
             <tr>
-              <td class="w-100 text-start">Prezzo</td>
+              <td class="w-100 text-center">Prezzo</td>
               <td @click="orderby(3)">
                 <i
                   v-if="this.asc === true && this.orderProperty === 3"
@@ -86,39 +94,46 @@
         </tr>
       </tbody>
       <tbody>
-        <tr v-for="(item, index) in info.listOfElements" :key="index" @click.stop="$router.push({path:'product/detail/'+item.id})">
+        <tr
+          class="detail"
+          v-for="(item, index) in info.listOfElements"
+          :key="index"
+          @click.stop="$router.push({ path: 'product/detail/' + item.id })"
+        >
           <td class="w-25 align-middle">{{ item.brandName }}</td>
           <td class="w-25 align-middle">
             <span>{{ item.name }}</span
             ><span class="text-primary">{{ item.shortDescription }}</span>
           </td>
-          <td class="text-start w-50 align-middle">
+          <td class="text-start w-25 align-middle">
             <span
-              class="badge bg-primary"
+              class="badge bg-primary ms-2"
               v-for="(cat, i) in info.listOfElements[index].categories"
               :key="i"
               >{{ cat }}</span
             >
           </td>
-          <td class="w-25 align-middle">{{ item.price }}€</td>
-          <td>
-            <i
-              class="bi bi-pencil-square"
-              @click.stop="$router.push({ path: 'product/' + item.id })"
-            ></i>
+          <td class="align-middle text-center">{{ item.price }}€</td>
+          <td class=" align-middle btn-group text-center">
+            <button class="btn btn-outline-secondary px-2 py-1" @click.stop="$router.push({ path: 'product/' + item.id })">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="btn btn-outline-secondary px-2 py-1 " @click.stop="deleteItem(item.id,index)">
+              <i class="bi bi-trash3-fill"></i>
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <Paging 
-    :pageNumber="pageNumber"
-    :pageSize="pageSize"
-    :totalPages="info.totalPages"
-    v-on:next="next"
-    v-on:previous="previous"
-    v-on:selectedIndex="selectedIndex"/>
-
+    <Paging
+      :pageNumber="pageNumber"
+      :pageSize="pageSize"
+      :totalPages="info.totalPages"
+      v-on:next="next"
+      v-on:previous="previous"
+      v-on:selectedIndex="selectedIndex"
+    />
   </div>
 </template>
 
@@ -126,10 +141,10 @@
 import { RepositoryFactory } from "../../services/repositoryFactory";
 const ProductRepo = RepositoryFactory.get("products");
 const BrandRepo = RepositoryFactory.get("brands");
-import Paging from "../Paging/paging.vue"
+import Paging from "../Paging/paging.vue";
 export default {
-    components:{
-    Paging
+  components: {
+    Paging,
   },
   data() {
     return {
@@ -161,7 +176,11 @@ export default {
         this.asc,
         this.brandFilter
       );
-      
+    },
+    async deleteItem(id,index) {
+      if(confirm('item will be deleted'))
+      await ProductRepo.deleteProduct(id);
+      this.info.listOfElements.splice(index,1)
     },
     async next() {
       if (this.pageNumber < this.info.totalPages) this.pageNumber++;
@@ -171,8 +190,8 @@ export default {
       if (this.pageNumber > 1) this.pageNumber--;
       await this.load();
     },
-    async selectedIndex(page) {
-      this.pageNumber = page.index;
+    async selectedIndex(index) {
+      this.pageNumber = index;
       await this.load();
     },
     async onChange(event) {
@@ -197,5 +216,10 @@ export default {
 <style scoped>
 a {
   cursor: pointer;
+}
+.btn-group{
+  width:10%;
+  position: inherit;
+  display: table-cell;
 }
 </style>

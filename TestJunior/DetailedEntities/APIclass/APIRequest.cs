@@ -19,6 +19,7 @@ namespace TestJunior.DetailedEntities
         public string Name { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
+        public string RequestText { get; set; }
         public PolishedProduct Product { get; set; }
         public IEnumerable<APIReply> Replies { get; set; } = new List<APIReply>();
     }

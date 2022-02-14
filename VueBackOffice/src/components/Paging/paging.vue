@@ -28,7 +28,7 @@
       <li
         class="page-item"
         :class="currentPage === maxPage ? 'active' : ''"
-        v-if="maxPage !== 1"
+        v-if="maxPage > 1"
       >
         <a class="page-link" @click="selectedIndex(maxPage)">
           {{ maxPage }}
@@ -80,9 +80,7 @@ export default {
       this.$emit('previous'); 
     },
     async selectedIndex(index) {
-      this.$emit('selectedIndex',{
-        index
-      }); 
+      this.$emit('selectedIndex',index); 
     }
   }
 }

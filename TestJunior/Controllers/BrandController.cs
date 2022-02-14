@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 using TestJunior.DetailedEntities;
 using TestJunior.Repository;
 using TestJunior.Services;
@@ -26,15 +27,15 @@ namespace TestJunior.Controllers
         /// <returns>
         /// A Bad request if either pagenumber or pagesize are 0 or below
         /// A paginated list of Brands if the input parameters are valid</returns>
-        [HttpGet("brands/{pagenumber}/{pagesize}/{order}/{asc_desc}")]
-        public IActionResult GetAllPAginatedBrands(int pagenumber = 1, int pagesize = 10, int order = 0, bool asc_desc = true)
+        [HttpGet("brands/{pagenumber}/{pagesize}/{search?}")]
+        public IActionResult GetAllPAginatedBrands(int pagenumber = 1, int pagesize = 10, string search="")
         {
 
             if (pagenumber <= 0)
                 return BadRequest("pagenumber is 0 or negative");
             if (pagesize <= 0)
                 return BadRequest("pagesize is 0 or negative");
-            return Ok(_brandServices.ListOfBrands(pagenumber, pagesize, order, asc_desc));
+            return Ok(_brandServices.ListOfBrands(pagenumber, pagesize, search));
 
         }
 
@@ -89,6 +90,17 @@ namespace TestJunior.Controllers
                 return Ok();
             else
                 return BadRequest("Errore nell'aggiunta");
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteBrandAsync(int id)
+        {
+            if (id <= 0)
+                return BadRequest("Id can't be 0 or negative");
+            if (await _brandServices.DeleteBrandAsync(id) == 1)
+                return Ok("item deleted successfully");
+            else
+                return NotFound("item not found");
         }
 
     }

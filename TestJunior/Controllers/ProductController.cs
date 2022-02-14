@@ -64,7 +64,7 @@ namespace TestJunior.Controllers
         /// <returns>
         /// 
         /// </returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteProductAsync(int id)
         {
             if (id <= 0)

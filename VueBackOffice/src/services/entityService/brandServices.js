@@ -3,11 +3,11 @@ import Repository from '../repository'
 const resource="/Brand"
 export default {
 
-    getBrands(pageNumber,pageSize,orderProperty,asc)
+    getBrands(pageNumber,pageSize,brandName)
 
     {
 
-        return Repository.get(`https://localhost:44355${resource}/brands/${pageNumber}/${pageSize}/${orderProperty}/${asc}`)
+        return Repository.get(`https://localhost:44355${resource}/brands/${pageNumber}/${pageSize}/${brandName}`)
 
                 .then(response => (response.data));
 
@@ -44,6 +44,9 @@ export default {
     },
     updateBrand(brand){
         return Repository.put(`https://localhost:44355${resource}/update`,brand)
+    },
+    deleteBrand(id){
+        return Repository.delete(`https://localhost:44355${resource}/delete/${id}`)
     }
 
 }

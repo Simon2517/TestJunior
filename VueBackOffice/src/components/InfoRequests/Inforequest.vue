@@ -1,5 +1,9 @@
 <template>
-  <div v-if="info !== null">
+  <div v-if="info !== null" class="mt-5">
+  <div class="fs-2">
+Leads
+  </div>
+   <hr class="m-0 my-1" />
     <table class="table table-striped table-hover">
       <thead>
         <tr>
@@ -37,12 +41,15 @@
                 {{ brand.name }}
               </option>
             </select>
-            <input type="text" v-model="productName" @keyup.enter="load()"/>
-          </td>
+            <div class="form-group d-inline">
+            <input  class="ms-3" type="text" v-model="productName" @keyup="search()"/>
+            <button type="button" class="btn btn-primary btn-sm ms-2 " @click="load()">Cerca</button>
+            </div>
+           </td>
         </tr>
       </tbody>
       <tbody>
-        <tr v-for="(item, index) in info.listOfElements" :key="index" @click.stop="$router.push({path:'leed/detail/'+item.id})">
+        <tr class="detail" v-for="(item, index) in info.listOfElements" :key="index" @click.stop="$router.push({path:'leed/detail/'+item.id})">
           <td>{{ item.brandName }}</td>
           <td>{{ item.productName }}</td>
           <td>{{ item.name }}</td>
@@ -81,6 +88,14 @@ export default {
       productName: "",
     };
   },
+  computed:{
+productId(){
+  if(this.$route.params.productId!=null)
+    return this.$route.params.productId;
+  else
+    return 0;
+},
+  },
   methods: {
     async load() {
       this.info = await InforequestRepo.getRequests(
@@ -88,9 +103,10 @@ export default {
         this.pageSize,
         this.asc,
         this.brandId,
+        this.productId,
         this.productName
+        
       );
-      this.ListofBrands = await BrandRepo.getBrandsName();
     },
     async onChange(event) {
       this.pageNumber = 1;
@@ -105,17 +121,23 @@ export default {
       if (this.pageNumber > 1) this.pageNumber--;
       await this.load();
     },
-    async selectedIndex(page) {
-      this.pageNumber = page.index;
+    async selectedIndex(index) {
+      this.pageNumber = index;
       await this.load();
     },
     async orderBy() {
       this.asc = !this.asc;
       await this.load();
     },
+    async search(){
+      if(this.productName.length>3)
+        await this.load();
+    }
   },
   async created() {
     await this.load();
+      this.ListofBrands = await BrandRepo.getBrandsName();
+
   },
 };
 </script>
