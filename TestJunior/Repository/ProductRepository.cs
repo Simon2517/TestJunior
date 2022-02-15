@@ -66,7 +66,7 @@ namespace TestJunior.Repository
             IDbContextTransaction transaction=_ctx.Database.BeginTransaction();
             try
             {
-                if(_ctx.Product.Any(p=>p.Name==))
+                
                 _ctx.Product.Add(product);
                 _ctx.SaveChanges();
                 transaction.Commit();
