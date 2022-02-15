@@ -61,12 +61,13 @@ namespace TestJunior.Repository
             return _ctx.Product.Where(p=>p.ProductId == id);
         }
 
-        public int add(Product entity)
+        public int add(Product product)
         {
             IDbContextTransaction transaction=_ctx.Database.BeginTransaction();
             try
             {
-                _ctx.Product.Add(entity);
+                if(_ctx.Product.Any(p=>p.Name==))
+                _ctx.Product.Add(product);
                 _ctx.SaveChanges();
                 transaction.Commit();
             }
@@ -74,22 +75,22 @@ namespace TestJunior.Repository
             {
                 transaction.Rollback();
             }
-            return entity.ProductId;
+            return product.ProductId;
         }
 
-        public int update(Product entity)
+        public int update(Product product)
         {
             IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
             try
             {
-                _ctx.Product.Update(entity);
+                _ctx.Product.Update(product);
                 transaction.Commit();
             }
             catch (Exception ex)
             {
                 transaction.Rollback();
             }
-            return entity.ProductId;
+            return product.ProductId;
         }
     }
 }
