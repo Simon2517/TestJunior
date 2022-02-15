@@ -20,6 +20,21 @@ namespace TestJunior.Controllers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">id of the brand searched</param>
+        /// <returns>the brand searched if there was no error
+        /// a bad request if the id is 0 or negative</returns>
+        [HttpGet("{id}")]
+        public IActionResult GetBrandById(int id)
+        {
+            if(id > 0)
+                return Ok(_brandServices.GetSingleBrand(id));
+            else
+                return BadRequest("error");
+        }
+
+        /// <summary>
         /// method for the pagination of brands
         /// </summary>
         /// <param name="pagenumber">Number of the page requested</param>
@@ -68,30 +83,53 @@ namespace TestJunior.Controllers
         }
 
 
-        [HttpGet("{id}")]
-        public IActionResult GetBrandById(int id)
-        {
 
-            return Ok(_brandServices.GetSingleBrand(id));
-        }
-
+        /// <summary>
+        /// updating a product
+        /// </summary>
+        /// <param name="brand">brand to be updated</param>
+        /// <returns>
+        /// success if the brand has been updated
+        /// or bad request if there was an error
+        /// </returns>
         [HttpPut("update")]
         public IActionResult EditBrand(Brand brand)
         {
+            if (brand == null)
+                return BadRequest("error");
+            
             return Ok(_brandServices.UpdateBrand(brand));
+
         }
 
 
-
+        /// <summary>
+        /// adding a product
+        /// </summary>
+        /// <param name="brandModel">brand to be added</param>
+        /// <returns>
+        /// a success status code if the brand has been added
+        /// or a bad request if there was an error
+        /// </returns>
         [HttpPost("new")]
-        public IActionResult AddBrand(BrandViewModel brand)
+        public IActionResult AddBrand(BrandViewModel brandModel)
         {
-            if (_brandServices.AddBrand(brand) != 0)
+            if (_brandServices.AddBrand(brandModel) != 0)
                 return Ok();
             else
-                return BadRequest("Errore nell'aggiunta");
+                return BadRequest("Error in insert");
         }
 
+
+        /// <summary>
+        /// soft delete of a brand and all its relationed entities records
+        /// </summary>
+        /// <param name="id">id of the brand to delete</param>
+        /// <returns>
+        /// a bad request if id is 0 or negative
+        /// a success if the brand has been deleted
+        /// a not found if the brand is not fount
+        /// </returns>
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteBrandAsync(int id)
         {

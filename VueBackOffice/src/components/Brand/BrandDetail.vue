@@ -57,7 +57,7 @@
 
 <script>
 import { RepositoryFactory } from "../../services/repositoryFactory";
-import Paging from "../Paging/paging.vue";
+import Paging from "../Generics/paging.vue";
 const BrandRepo = RepositoryFactory.get("brands");
 export default {
   components: {

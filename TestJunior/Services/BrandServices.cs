@@ -103,24 +103,39 @@ namespace TestJunior.Services
 
         }
 
-        public int AddBrand(BrandViewModel entity)
+        /// <summary>
+        /// creates a single brand entity
+        /// bounding for each if its products, if there's any,
+        /// their categories if any are selected
+        /// </summary>
+        /// <param name="brandModel">the brand with its products</param>
+        /// <returns>the number of database entities affected</returns>
+        public int AddBrand(BrandViewModel brandModel)
         {
-            Brand brand = entity.brand;
-            List<ProductCategories> categories = new List<ProductCategories>();
-            List<Product> prods = new List<Product>();
-            foreach (APIProductWithCategories prod in entity.prodCategories)
-            {
-                categories.Clear();
-                foreach (int cat in prod.categoriesSelected)
-                {
-                    categories.Add(new ProductCategories { ProductId = prod.Product.ProductId, CategoryId = cat });
-                }
-                prod.Product.ProdsCategories = categories;
-                prods.Add(prod.Product);
-                
-            }
-            brand.Products = prods;
+            Brand brand = brandModel.brand;
             brand.Account.AccountType = 2;
+            if(brandModel.prodCategories.Count > 0)
+            {
+                List<ProductCategories> categories = new List<ProductCategories>();
+
+                foreach (APIProductWithCategories prod in brandModel.prodCategories)
+                {
+                    if(prod.categoriesSelected.Count > 0)
+                    {
+                        categories.Clear();
+                        foreach (int cat in prod.categoriesSelected)
+                        {
+                            categories.Add(new ProductCategories { 
+                                ProductId = prod.Product.ProductId,
+                                CategoryId = cat });
+                        }
+                    }
+
+                    prod.Product.ProdsCategories = categories;
+                }
+
+                brand.Products = brandModel.prodCategories.Select(prods => prods.Product).ToList();
+            }
             return _Brandrepo.add(brand);
         }
 

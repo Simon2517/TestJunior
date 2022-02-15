@@ -20,6 +20,56 @@ namespace TestJunior.Controllers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">id of product selected</param>
+        /// <returns>returns a product with his list of categories if the id is higher than 0</returns>
+        [HttpGet("{id}")]
+        public IActionResult GetProductWithCategories(int id)
+        {
+            if (id > 0)
+                return Ok(_productServices.GetSingleProduct(id));
+            else
+                return BadRequest("Id less or equal 0");
+        }
+
+
+        /// <summary>
+        /// adding a product
+        /// </summary>
+        /// <param name="productModel">product to be added</param>
+        /// <returns>
+        /// a success status code if the product has been added
+        /// or a bad request if there was an error
+        /// </returns>
+        [HttpPost("new")]
+        public IActionResult AddProduct(APIProductWithCategories productModel)
+        {
+            if (_productServices.AddProduct(productModel) != 0)
+                return Ok("Product added");
+            else
+                return BadRequest("Error during insert");
+        }
+
+        /// <summary>
+        /// updating a product
+        /// </summary>
+        /// <param name="productModel">product to be updated</param>
+        /// <returns>
+        /// success if the product has been updated
+        /// or bad request if there was an error
+        /// </returns>
+        [HttpPut("update")]
+        public IActionResult UpdateProduct(APIProductWithCategories productModel)
+        {
+            if (_productServices.UpdateProduct(productModel) != 0)
+                return Ok("Product updated");
+            else
+                return BadRequest("Error during update");
+        }
+
+
+        /// <summary>
         /// method for the pagination of brands
         /// </summary>
         /// <param name="pagenumber">Number of the page requested</param>
@@ -62,7 +112,9 @@ namespace TestJunior.Controllers
         /// </summary>
         /// <param name="id">id of the product to delete</param>
         /// <returns>
-        /// 
+        /// a bad request if id is 0 or negative
+        /// a success if the product has been deleted
+        /// a not found if the product is not fount
         /// </returns>
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteProductAsync(int id)
@@ -73,30 +125,6 @@ namespace TestJunior.Controllers
                 return Ok("item deleted successfully");
             else
                 return NotFound("item not found");
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetProductWithCategories(int id)
-        {
-            return Ok(_productServices.GetSingleProduct(id));
-        }
-
-        [HttpPost("new")]
-        public IActionResult AddProduct(APIProductWithCategories product)
-        {
-            if (_productServices.AddProduct(product) != 0)
-                return Ok();
-            else
-                return BadRequest("Errore nell'aggiunta");
-        }
-
-        [HttpPut("update")]
-        public IActionResult UpdateProduct(APIProductWithCategories product)
-        {
-            if (_productServices.UpdateProduct(product) != 0)
-                return Ok();
-            else
-                return BadRequest("Errore nell'aggiunta");
         }
 
     }

@@ -10,7 +10,7 @@
           class="btn btn-outline-primary"
           @click.stop="$router.push({ path: 'brand/new' })"
         >
-          Aggiungi Prodotto
+          Aggiungi Brand
         </button>
       </div>
     </div>
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import Paging from "../Paging/paging.vue";
+import Paging from "../Generics/paging.vue";
 import { RepositoryFactory } from "../../services/repositoryFactory";
 import brandServices from "../../services/entityService/brandServices";
 const BrandRepo = RepositoryFactory.get("brands");

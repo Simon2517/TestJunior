@@ -25,7 +25,7 @@
       <div class="mb-2 mt-5"><span class="fw-bold fs-6"> Risposte/commenti alla Richiesta</span></div>
       <div v-for="(item, index) in listOfReplies" :key="index">
         <div class="card border-success mb-3">
-          <div class="card-header">{{item.insertedDate}} - {{item.name}}</div>
+          <div class="card-header">{{insertedDate(item.insertedDate)}} - {{item.name}}</div>
           <div class="card-body text-success">
             <p class="card-text">
               {{item.replyText}}
@@ -49,7 +49,7 @@
 <script>
 import { RepositoryFactory } from "../../services/repositoryFactory";
 const InfoRepo = RepositoryFactory.get("inforequests");
-import Paging from "../Paging/paging.vue";
+import Paging from "../Generics/paging.vue";
 
 export default {
   components: {
@@ -62,6 +62,7 @@ export default {
       pageSize: 2,
     };
   },
+  
   computed: {
     startIndex() {
       return (this.pageNumber - 1) * this.pageSize;
@@ -86,6 +87,9 @@ export default {
     },
     selectedIndex(index) {
       this.pageNumber = index;
+    },
+        insertedDate(date) {
+      return new Date(date).toLocaleDateString("IT");
     },
   },
   async created() {

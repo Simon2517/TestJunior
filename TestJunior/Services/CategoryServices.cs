@@ -14,6 +14,10 @@ namespace TestJunior.Services
             _Categoryrepo = categoryrepo;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>full list of categories with their id and Name</returns>
         public List<APICategory> GetAllCategories()
         {
             List<APICategory> list=_Categoryrepo.GetAll().Select(x=>new APICategory

@@ -1,16 +1,9 @@
-import Repository from '../repository'
+import Repository from "../repository";
 
-const resource="/Category"
+const resource = "/Category";
 export default {
-
-    getCategories()
-
-    {
-
-        return Repository.get(`https://localhost:44355${resource}`)
-
-                .then(response => (response.data));
-
-    }
-
-}
+  getCategories() {
+    return Repository.get(`https://localhost:44355${resource}`)
+    .then((response) => response.data);
+  },
+};

@@ -18,7 +18,10 @@ namespace TestJunior.Controllers
             _CategoryServices = CategoryServices;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>full list of Categories</returns>
         [HttpGet]
         public IActionResult GetAll()
         {

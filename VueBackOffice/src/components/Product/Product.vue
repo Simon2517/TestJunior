@@ -114,11 +114,17 @@
             >
           </td>
           <td class="align-middle text-center">{{ item.price }}€</td>
-          <td class=" align-middle btn-group text-center">
-            <button class="btn btn-outline-secondary px-2 py-1" @click.stop="$router.push({ path: 'product/' + item.id })">
+          <td class="align-middle btn-group text-center">
+            <button
+              class="btn btn-outline-secondary px-2 py-1"
+              @click.stop="$router.push({ path: 'product/' + item.id })"
+            >
               <i class="bi bi-pencil-square"></i>
             </button>
-            <button class="btn btn-outline-secondary px-2 py-1 " @click.stop="deleteItem(item.id,index)">
+            <button
+              class="btn btn-outline-secondary px-2 py-1"
+              @click.stop="deleteItem(item.id)"
+            >
               <i class="bi bi-trash3-fill"></i>
             </button>
           </td>
@@ -134,6 +140,32 @@
       v-on:previous="previous"
       v-on:selectedIndex="selectedIndex"
     />
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+      <div
+        id="liveToast"
+        class="toast"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="toast-header">
+          <strong class="me-auto">Bootstrap</strong>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="toast-body">Hello, world! This is a toast message.</div>
+      </div>
+    </div>
+    <div
+      v-if="this.deletedProduct!==null"
+      class="alert alert-danger position-fixed bottom-0 end-0 p-3 hidden"
+      role="alert"
+    >
+    product deleted {{deletedProduct}}   </div>
   </div>
 </template>
 
@@ -141,7 +173,7 @@
 import { RepositoryFactory } from "../../services/repositoryFactory";
 const ProductRepo = RepositoryFactory.get("products");
 const BrandRepo = RepositoryFactory.get("brands");
-import Paging from "../Paging/paging.vue";
+import Paging from "../Generics/paging.vue";
 export default {
   components: {
     Paging,
@@ -156,6 +188,7 @@ export default {
       asc: true,
       ListofBrands: null,
       brandFilter: "",
+      deletedProduct:null
     };
   },
   computed: {
@@ -177,10 +210,12 @@ export default {
         this.brandFilter
       );
     },
-    async deleteItem(id,index) {
-      if(confirm('item will be deleted'))
-      await ProductRepo.deleteProduct(id);
-      this.info.listOfElements.splice(index,1)
+    async deleteItem(id) {
+      if (confirm("item will be deleted")) {
+        await ProductRepo.deleteProduct(id);
+        await this.load();
+        
+      }
     },
     async next() {
       if (this.pageNumber < this.info.totalPages) this.pageNumber++;
@@ -217,9 +252,14 @@ export default {
 a {
   cursor: pointer;
 }
-.btn-group{
-  width:10%;
+.btn-group {
+  width: 10%;
   position: inherit;
   display: table-cell;
+}
+.hidden {
+    -webkit-animation: fadeinout 4s linear forwards;
+    animation: fadeinout 4s linear forwards;
+    opacity: 0;
 }
 </style>

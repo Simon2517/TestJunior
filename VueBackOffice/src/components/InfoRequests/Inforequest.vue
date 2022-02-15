@@ -1,70 +1,86 @@
 <template>
-  <div v-if="info !== null" class="mt-5">
-  <div class="fs-2">
-Leads
-  </div>
-   <hr class="m-0 my-1" />
-    <table class="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Nome Brand</th>
-          <th scope="col">Nome Prodotto</th>
-          <th scope="col">Nome Richiedente</th>
-          <th scope="col">
-            <tr>
-              <td class="w-100 text-start">Data Richiesta</td>
-              <td @click="orderBy()">
-                <i v-if="this.asc === true" class="bi bi-caret-up-fill d-flex">
-                </i>
-                <i v-else class="bi bi-caret-up-fill d-flex notselected"> </i>
+  <div>
+    <div v-if="isLoading === false" class="mt-5">
+      <div class="fs-2">Leads</div>
+      <hr class="m-0 my-1" />
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Nome Brand</th>
+            <th scope="col">Nome Prodotto</th>
+            <th scope="col">Nome Richiedente</th>
+            <th scope="col">
+              <tr>
+                <td class="w-100 text-start">Data Richiesta</td>
+                <td @click="orderBy()">
+                  <i
+                    v-if="this.asc === true"
+                    class="bi bi-caret-up-fill d-flex"
+                  >
+                  </i>
+                  <i v-else class="bi bi-caret-up-fill d-flex notselected"> </i>
 
-                <i
-                  v-if="this.asc === false"
-                  class="bi bi-caret-down-fill d-flex"
-                ></i>
-                <i v-else class="bi bi-caret-down-fill d-flex notselected"> </i>
-              </td>
-            </tr>
-          </th>
-        </tr>
-      </thead>
-      <tbody class="text-start">
-        <tr>
-          <td colspan="4">
-            <select class="form-select-sm w-auto" @change="onChange($event)">
-              <option default value="">Tutti i brand</option>
-              <option
-                v-for="brand in ListofBrands"
-                :key="brand.id"
-                :value="brand.id"
-              >
-                {{ brand.name }}
-              </option>
-            </select>
-            <div class="form-group d-inline">
-            <input  class="ms-3" type="text" v-model="productName" @keyup="search()"/>
-            <button type="button" class="btn btn-primary btn-sm ms-2 " @click="load()">Cerca</button>
-            </div>
-           </td>
-        </tr>
-      </tbody>
-      <tbody>
-        <tr class="detail" v-for="(item, index) in info.listOfElements" :key="index" @click.stop="$router.push({path:'leed/detail/'+item.id})">
-          <td>{{ item.brandName }}</td>
-          <td>{{ item.productName }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.requestedDate }}</td>
-        </tr>
-      </tbody>
-    </table>
+                  <i
+                    v-if="this.asc === false"
+                    class="bi bi-caret-down-fill d-flex"
+                  ></i>
+                  <i v-else class="bi bi-caret-down-fill d-flex notselected">
+                  </i>
+                </td>
+              </tr>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="text-start">
+          <tr>
+            <td>
+              <select class="form-select-sm w-auto" @change="onChange($event)">
+                <option default value="">Tutti i brand</option>
+                <option
+                  v-for="brand in ListofBrands"
+                  :key="brand.id"
+                  :value="brand.id"
+                >
+                  {{ brand.name }}
+                </option>
+              </select>
+            </td>
+            <td>
+              <input
+                type="text"
+                placeholder="Nome Prodotto"
+                v-model="productName"
+                @keyup="search()"
+                @keyup.enter="load()"
+              />
+            </td>
+            <td colspan="100%"></td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr
+            class="detail"
+            v-for="(item, index) in info.listOfElements"
+            :key="index"
+            @click.stop="$router.push({ path: 'leed/detail/' + item.id })"
+          >
+            <td>{{ item.brandName }}</td>
+            <td>{{ item.productName }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ requestedDate(item.requestedDate) }}</td>
+          </tr>
+        </tbody>
+      </table>
 
-    <Paging 
-    :pageNumber="pageNumber"
-    :pageSize="pageSize"
-    :totalPages="info.totalPages"
-    v-on:next="next"
-    v-on:previous="previous"
-    v-on:selectedIndex="selectedIndex"/>
+      <Paging
+        :pageNumber="pageNumber"
+        :pageSize="pageSize"
+        :totalPages="info.totalPages"
+        v-on:next="next"
+        v-on:previous="previous"
+        v-on:selectedIndex="selectedIndex"
+      />
+    </div>
   </div>
 </template>
 
@@ -72,13 +88,14 @@ Leads
 import { RepositoryFactory } from "../../services/repositoryFactory";
 const InforequestRepo = RepositoryFactory.get("inforequests");
 const BrandRepo = RepositoryFactory.get("brands");
-import Paging from "../Paging/paging.vue"
+import Paging from "../Generics/paging.vue";
 export default {
-    components:{
-    Paging
+  components: {
+    Paging,
   },
   data() {
     return {
+      isLoading: true,
       info: null,
       pageNumber: 1,
       pageSize: 10,
@@ -88,13 +105,12 @@ export default {
       productName: "",
     };
   },
-  computed:{
-productId(){
-  if(this.$route.params.productId!=null)
-    return this.$route.params.productId;
-  else
-    return 0;
-},
+  computed: {
+    productId() {
+      if (this.$route.params.productId != null)
+        return this.$route.params.productId;
+      else return 0;
+    },
   },
   methods: {
     async load() {
@@ -105,13 +121,14 @@ productId(){
         this.brandId,
         this.productId,
         this.productName
-        
       );
     },
     async onChange(event) {
       this.pageNumber = 1;
       this.brandId = event.target.value;
+      this.isLoading = true;
       await this.load();
+      this.isLoading = false;
     },
     async next() {
       if (this.pageNumber < this.info.totalPages) this.pageNumber++;
@@ -129,15 +146,17 @@ productId(){
       this.asc = !this.asc;
       await this.load();
     },
-    async search(){
-      if(this.productName.length>3)
-        await this.load();
-    }
+    async search() {
+      if (this.productName.length > 3) await this.load();
+    },
+    requestedDate(date) {
+      return new Date(date).toLocaleDateString("IT");
+    },
   },
   async created() {
     await this.load();
-      this.ListofBrands = await BrandRepo.getBrandsName();
-
+    this.ListofBrands = await BrandRepo.getBrandsName();
+    this.isLoading = false;
   },
 };
 </script>

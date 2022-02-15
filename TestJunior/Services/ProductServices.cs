@@ -121,15 +121,18 @@ namespace TestJunior.Services
             
         }
 
-        public int AddProduct(APIProductWithCategories entity)
+        public int AddProduct(APIProductWithCategories productModel)
         {
-            Product product = entity.Product;
-            List<ProductCategories> categories = new List<ProductCategories>();
-            foreach(var x in entity.categoriesSelected)
+            Product product = productModel.Product;
+            if (productModel.categoriesSelected.Count > 0)
             {
-                categories.Add(new ProductCategories {CategoryId=x,ProductId=entity.Product.ProductId });
+                List<ProductCategories> categories = new List<ProductCategories>();
+                foreach (var x in productModel.categoriesSelected)
+                {
+                    categories.Add(new ProductCategories { CategoryId = x, ProductId = productModel.Product.ProductId });
+                }
+                product.ProdsCategories = categories;
             }
-            product.ProdsCategories = categories;
             return _Productrepo.add(product);
         }
 
@@ -146,15 +149,15 @@ namespace TestJunior.Services
 
         }
 
-        public int UpdateProduct(APIProductWithCategories product)
+        public int UpdateProduct(APIProductWithCategories productModel)
         {
             List<ProductCategories> categories=new List<ProductCategories>();
-            foreach (var x in product.categoriesSelected)
+            foreach (var x in productModel.categoriesSelected)
             {
-                categories.Add(new ProductCategories { CategoryId = x, ProductId = product.Product.ProductId });
+                categories.Add(new ProductCategories { CategoryId = x, ProductId = productModel.Product.ProductId });
             }
-            product.Product.ProdsCategories = categories;
-            return _Productrepo.update(product.Product);
+            productModel.Product.ProdsCategories = categories;
+            return _Productrepo.update(productModel.Product);
         }
     }
 }

@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    <div class="text-start">
+    <div v-if="totalRequests>0" class="text-start">
       <div class="fw-bold fs-6">Leads per questo Prodotto</div>
       <div class="my-2">
         <span class="fw-bold fs-6">{{ totalRequests }}</span> richieste
@@ -36,6 +36,9 @@
       >
         Vedi tutte le richieste informazioni
       </button>
+    </div>
+    <div v-else class="text-start">
+        Non ci sono Richieste di informazioni per questo prodotto
     </div>
   </div>
 </template>

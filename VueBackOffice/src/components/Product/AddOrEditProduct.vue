@@ -10,7 +10,7 @@
         </div>
         <div class="mb-3">
           <label class="form-label" for="Price">Price</label>
-          <input class="form-control" type="number" step=".01" v-model.number="formData.Price" />
+          <input class="form-control" type="number" min="0" max="999999999999999999" step=".01" v-model.number="formData.Price" required/>
         </div>
         <div>
           <select class="form-select-sm w-auto mb-4" v-model="formData.BrandId" required>
