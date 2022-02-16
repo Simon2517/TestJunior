@@ -22,7 +22,7 @@ namespace TestJunior.Repository
         public async Task<int> deleteAsync(int id)
         {
             int result = 0;
-            IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
+            using IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
             try
             {
                 var product = _ctx.Product.FirstOrDefault(x => x.ProductId == id);
@@ -63,33 +63,14 @@ namespace TestJunior.Repository
 
         public int add(Product product)
         {
-            IDbContextTransaction transaction=_ctx.Database.BeginTransaction();
-            try
-            {
-                
-                _ctx.Product.Add(product);
-                _ctx.SaveChanges();
-                transaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-            }
+            _ctx.Product.Add(product);
+            _ctx.SaveChanges();
             return product.ProductId;
         }
 
         public int update(Product product)
         {
-            IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
-            try
-            {
-                _ctx.Product.Update(product);
-                transaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-            }
+            _ctx.Product.Update(product);
             return product.ProductId;
         }
     }

@@ -14,11 +14,27 @@ namespace TestJunior.Services
             _Productrepo = _productrepo;
         }
 
+        /// <summary>
+        /// filters product by brand name
+        /// </summary>
+        /// <param name="brandName"></param>
+        /// <returns>an iQueriable of products filtered by brand name</returns>
         public IQueryable<Product> FilterProducts(string brandName)
         {
-            return _Productrepo.GetAll().Where(x => x.Brand.BrandName == brandName);
+            return _Productrepo.GetAll()
+                        .Where(x => x.Brand.BrandName == brandName);
         }
 
+        /// <summary>
+        /// orders products by property selected
+        /// </summary>
+        /// <param name="order">represents the order by property</param>
+        /// <param name="asc_desc">representes asc&desc by default true represents asc</param>
+        /// <param name="brandName"></param>
+        /// <returns>
+        /// an order and filtered list if brandName is not empty
+        /// otherwise an ordered list
+        /// </returns>
         public IQueryable<Product> OrderedProducts(int order=0,bool asc_desc=true,string brandName="")
         {
             IQueryable<Product> prods;
@@ -80,6 +96,11 @@ namespace TestJunior.Services
             return PaginatedList<PaginatedProduct>.Create(Prods, pagenumber, pagesize);
         }
 
+        /// <summary>
+        /// get detail of Product
+        /// </summary>
+        /// <param name="id">id of the product</param>
+        /// <returns></returns>
         public IQueryable<APIProductDetail> ProductDetail(int id)
         {
             
@@ -112,15 +133,26 @@ namespace TestJunior.Services
 
         }
 
+
+        /// <summary>
+        /// delete of product
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<int> DeleteProductAsync(int id)
         {
             if(id <= 0)
                 return 0;
             else
-             return await _Productrepo.deleteAsync(id);
+                return await _Productrepo.deleteAsync(id);
             
         }
 
+        /// <summary>
+        /// creates a product object binding its categories if any are selected
+        /// </summary>
+        /// <param name="productModel"></param>
+        /// <returns></returns>
         public int AddProduct(APIProductWithCategories productModel)
         {
             Product product = productModel.Product;
@@ -136,6 +168,11 @@ namespace TestJunior.Services
             return _Productrepo.add(product);
         }
 
+        /// <summary>
+        /// creates a viewModel by getting a product and binds its categories to a list
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public APIProductWithCategories GetSingleProduct(int id)
         {
             var product = _Productrepo.GetById(id);
@@ -146,15 +183,21 @@ namespace TestJunior.Services
                 categoriesSelected = categories
             };
             return productViewModel;
-
         }
 
+        /// <summary>
+        /// creates a product object with its categories starting from a product view model
+        /// </summary>
+        /// <param name="productModel"></param>
+        /// <returns></returns>
         public int UpdateProduct(APIProductWithCategories productModel)
         {
             List<ProductCategories> categories=new List<ProductCategories>();
             foreach (var x in productModel.categoriesSelected)
             {
-                categories.Add(new ProductCategories { CategoryId = x, ProductId = productModel.Product.ProductId });
+                categories.Add(new ProductCategories { 
+                    CategoryId = x, 
+                    ProductId = productModel.Product.ProductId });
             }
             productModel.Product.ProdsCategories = categories;
             return _Productrepo.update(productModel.Product);

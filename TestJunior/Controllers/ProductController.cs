@@ -10,7 +10,7 @@ namespace TestJunior.Controllers
 {
         [ApiController]
         [Route("[controller]")] 
-    public class ProductController : ControllerBase
+    public class ProductController : Controller
     {
 
         private readonly IProductServices _productServices;
@@ -46,7 +46,7 @@ namespace TestJunior.Controllers
         public IActionResult AddProduct(APIProductWithCategories productModel)
         {
             if (_productServices.AddProduct(productModel) != 0)
-                return Ok("Product added");
+                return Ok(productModel.Product.ProductId);
             else
                 return BadRequest("Error during insert");
         }
@@ -63,7 +63,7 @@ namespace TestJunior.Controllers
         public IActionResult UpdateProduct(APIProductWithCategories productModel)
         {
             if (_productServices.UpdateProduct(productModel) != 0)
-                return Ok("Product updated");
+                return Ok(productModel.Product.ProductId);
             else
                 return BadRequest("Error during update");
         }

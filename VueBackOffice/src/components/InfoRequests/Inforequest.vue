@@ -1,5 +1,15 @@
 <template>
   <div>
+    <div v-if="isLoading === true" class="mt-5 text-center">
+      <button class="btn btn-primary" type="button" disabled>
+        <span
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        Retrieving Data
+      </button>
+    </div>
     <div v-if="isLoading === false" class="mt-5">
       <div class="fs-2">Leads</div>
       <hr class="m-0 my-1" />
@@ -126,9 +136,7 @@ export default {
     async onChange(event) {
       this.pageNumber = 1;
       this.brandId = event.target.value;
-      this.isLoading = true;
       await this.load();
-      this.isLoading = false;
     },
     async next() {
       if (this.pageNumber < this.info.totalPages) this.pageNumber++;

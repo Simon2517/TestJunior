@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace TestJunior.Repository
         public async Task<int> deleteAsync(int id)
         {
             int result = 0;
-            IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
+            using IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
             try
             {
                 var brand = _ctx.Brand.FirstOrDefault(x => x.Id == id);
@@ -34,18 +35,14 @@ namespace TestJunior.Repository
                 await _ctx.InfoRequest
                         .Where(info => info.Product.ProductId == id)
                         .UpdateFromQueryAsync(x => new InfoRequest { isDeleted = true });
-                
-                await _ctx.ProductCategories
-                        .Where(pc => pc.Product.BrandId == id)
-                        .UpdateFromQueryAsync(x => new ProductCategories { isDeleted = true });
 
                 await _ctx.Product
                         .Where(p => p.BrandId == id)
                         .UpdateFromQueryAsync(x =>new Product { isDeleted=true});
 
-                result = brand.Id;
+                
                 _ctx.Update(brand);
-                _ctx.SaveChanges();
+                result = _ctx.SaveChanges();
 
                 transaction.Commit();
             }
@@ -68,34 +65,21 @@ namespace TestJunior.Repository
         }
         public int add(Brand brand)
         {
-            IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
-            try
+            var x = new Product
             {
-                _ctx.Brand.Add(brand);
-                _ctx.SaveChanges();
-                transaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-            }
-                return brand.Id;
-            
-
+                Name = null,
+            };
+            brand.Products.Append(x);
+            _ctx.Brand.Add(brand);
+            _ctx.SaveChanges();
+            return brand.Id;
         }
 
         public int update(Brand brand)
         {
-            IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
-            try
-            {
-                _ctx.Brand.Update(brand);
-                transaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-            }
+
+            _ctx.Brand.Update(brand);
+            _ctx.SaveChanges();
             return brand.Id;
         }
     }

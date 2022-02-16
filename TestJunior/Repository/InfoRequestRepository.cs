@@ -25,7 +25,7 @@ namespace TestJunior.Repository
         public async Task<int> deleteAsync(int id)
         {
             int result = 0;
-            IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
+            using IDbContextTransaction transaction = _ctx.Database.BeginTransaction();
             try
             {
                 var inforequest = _ctx.Product.FirstOrDefault(x => x.ProductId == id);

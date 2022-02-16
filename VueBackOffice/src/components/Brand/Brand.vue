@@ -15,7 +15,14 @@
       </div>
     </div>
     <div class="col-3 mb-3">
-<input type="text" class="form-control" placeholder="Brand Name" v-model="brandName" @keyup.enter="load()"/>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Brand Name"
+        v-model="brandName"
+        @keyup="search()"
+        @keyup.enter="load()"
+      />
     </div>
     <hr class="m-0 my-1" />
     <table class="table table-striped table-hover">
@@ -39,7 +46,7 @@
           <td class="update_delete align-middle btn-group text-center">
             <button
               class="btn btn-outline-secondary px-2 py-1"
-              @click.stop="$router.push({ path: 'brand/' + item.id })"
+              @click.stop="$router.push({ path: 'brand/' + item.id + '/edit' })"
             >
               <i class="bi bi-pencil-square"></i>
             </button>
@@ -105,6 +112,9 @@ export default {
       this.pageNumber = index;
       await this.load();
     },
+    async search() {
+      if (this.brandName.length > 3) await this.load();
+    },
   },
   async created() {
     await this.load();
@@ -119,8 +129,8 @@ a {
 .bi::before {
   line-height: 0.75;
 }
-.btn-group{
-  width:10%;
+.btn-group {
+  width: 10%;
   position: inherit;
   display: table-cell;
 }

@@ -9,7 +9,7 @@ namespace TestJunior.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CategoryController : ControllerBase
+    public class CategoryController : Controller
     {
 
         private readonly ICategoryServices _CategoryServices;

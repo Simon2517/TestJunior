@@ -10,7 +10,7 @@ namespace TestJunior.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BrandController : ControllerBase
+    public class BrandController : Controller
     {
 
         private readonly IBrandServices _brandServices;
@@ -115,7 +115,7 @@ namespace TestJunior.Controllers
         public IActionResult AddBrand(BrandViewModel brandModel)
         {
             if (_brandServices.AddBrand(brandModel) != 0)
-                return Ok();
+                return Ok(brandModel.brand.Id);
             else
                 return BadRequest("Error in insert");
         }

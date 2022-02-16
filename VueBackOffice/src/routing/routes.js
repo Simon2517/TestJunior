@@ -32,7 +32,7 @@ export default new Router({
       component: AddBrand,
     },
     {
-      path: "/brand/:id",
+      path: "/brand/:id/edit",
       name: "editBrand",
       component: EditBrand,
     },
@@ -47,7 +47,7 @@ export default new Router({
       component: AddOrEditProduct,
     },
     {
-      path: "/product/:id",
+      path: "/product/:id/edit",
       name: "editProduct",
       component: AddOrEditProduct,
     },

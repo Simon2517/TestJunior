@@ -1,6 +1,5 @@
 <template>
   <div>
-    
     <div class="col-8 offset-2">
       <div class="fs-3 my-5">Modifica Brand</div>
       <form @submit.prevent="createPost()" class="text-start">
@@ -49,29 +48,29 @@ export default {
   name: "CreatePost",
   data() {
     return {
-      
       formData: {
         Id: 0,
         BrandName: "",
         Account: {},
-        Description:""
+        Description: "",
       },
     };
   },
   methods: {
     async createPost() {
-      await BrandRepo.updateBrand(this.formData);
-      this.$router.push({path:'detail/'+this.$route.params.id})
-    }
+      var id = await BrandRepo.updateBrand(this.formData);
+      if (id != 0)
+        this.$router.push({ name: "brandDetail",params:{id: this.$route.params.id}});
+    },
   },
-  async created(){
-    let info=await BrandRepo.getBrandById(this.$route.params.id);
-    this.formData.BrandName=info.brandName;
-    this.formData.Id=info.id;
-    this.formData.Account=info.account;
-    this.formData.Description=info.description;
-  }
-}
+  async created() {
+    let info = await BrandRepo.getBrandById(this.$route.params.id);
+    this.formData.BrandName = info.brandName;
+    this.formData.Id = info.id;
+    this.formData.Account = info.account;
+    this.formData.Description = info.description;
+  },
+};
 </script>
 
 <style scoped>

@@ -117,13 +117,15 @@
           <td class="align-middle btn-group text-center">
             <button
               class="btn btn-outline-secondary px-2 py-1"
-              @click.stop="$router.push({ path: 'product/' + item.id })"
+              @click.stop="
+                $router.push({ path: 'product/' + item.id + '/edit' })
+              "
             >
               <i class="bi bi-pencil-square"></i>
             </button>
             <button
               class="btn btn-outline-secondary px-2 py-1"
-              @click.stop="deleteItem(item.id)"
+              @click.stop="deleteItem(item.id, item.name)"
             >
               <i class="bi bi-trash3-fill"></i>
             </button>
@@ -140,10 +142,13 @@
       v-on:previous="previous"
       v-on:selectedIndex="selectedIndex"
     />
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div
+      class="position-fixed bottom-0 end-0 p-3"
+      style="z-index: 11"
+      v-show="deletedProduct !== ''"
+    >
       <div
-        id="liveToast"
-        class="toast"
+        class="toast d-block"
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
@@ -155,17 +160,12 @@
             class="btn-close"
             data-bs-dismiss="toast"
             aria-label="Close"
+            @click="deletedProduct=''"
           ></button>
         </div>
-        <div class="toast-body">Hello, world! This is a toast message.</div>
+        <div class="toast-body">product {{ deletedProduct }} deleted successfully</div>
       </div>
     </div>
-    <div
-      v-if="this.deletedProduct!==null"
-      class="alert alert-danger position-fixed bottom-0 end-0 p-3 hidden"
-      role="alert"
-    >
-    product deleted {{deletedProduct}}   </div>
   </div>
 </template>
 
@@ -188,7 +188,7 @@ export default {
       asc: true,
       ListofBrands: null,
       brandFilter: "",
-      deletedProduct:null
+      deletedProduct: "",
     };
   },
   computed: {
@@ -210,11 +210,12 @@ export default {
         this.brandFilter
       );
     },
-    async deleteItem(id) {
+    async deleteItem(id, name) {
+      console.log(name);
       if (confirm("item will be deleted")) {
+        this.deletedProduct = name;
         await ProductRepo.deleteProduct(id);
         await this.load();
-        
       }
     },
     async next() {
@@ -257,9 +258,6 @@ a {
   position: inherit;
   display: table-cell;
 }
-.hidden {
-    -webkit-animation: fadeinout 4s linear forwards;
-    animation: fadeinout 4s linear forwards;
-    opacity: 0;
-}
+
+
 </style>

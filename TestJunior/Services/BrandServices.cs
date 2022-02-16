@@ -15,11 +15,19 @@ namespace TestJunior.Services
             _Brandrepo = brandrepo;
             _Productrepo = _productrepo;
         }
-        public PaginatedList<PaginatedBrand> ListOfBrands(int pagenumber, int pagesize, string search)
+
+        /// <summary>
+        /// creates a paginated list of ordered and filtered brands
+        /// </summary>
+        /// <param name="pagenumber">the page we are at</param>
+        /// <param name="pagesize">the total number of products in that page</param>
+        /// <param name="brandName">the name of the brand searched</param>
+        /// <returns>a paginated listof brands</returns>
+        public PaginatedList<PaginatedBrand> ListOfBrands(int pagenumber, int pagesize, string brandName)
         {
             if (pagenumber <= 0 || pagesize <= 0)
                 return null;
-            IQueryable<PaginatedBrand> Brands = FilterBrands(search)
+            IQueryable<PaginatedBrand> Brands = FilterBrands(brandName)
                     .Select(brand => new PaginatedBrand
                     {
                         Id = brand.Id,
@@ -30,7 +38,11 @@ namespace TestJunior.Services
             return PaginatedList<PaginatedBrand>.Create(Brands, pagenumber, pagesize);
         }
 
-
+        /// <summary>
+        /// get brand detail
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IQueryable<APIBrandDetail> BrandDetail(int id)
         {
 
@@ -64,26 +76,38 @@ namespace TestJunior.Services
             return Brands;
             }
 
-        public IQueryable<Brand> FilterBrands(string search)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="brandName"></param>
+        /// <returns></returns>
+        public IQueryable<Brand> FilterBrands(string brandName)
         {
-            string _search=search ?? "";
+            string _search=brandName ?? "";
             var prods = _Brandrepo.GetAll();
-            if(string.IsNullOrEmpty(search))
+            if(string.IsNullOrEmpty(brandName))
                 return prods;
             else
                 return prods.Where(b=>b.BrandName.ToLower().Contains(_search.ToLower()));
         }
 
+        /// <summary>
+        /// get all brands
+        /// </summary>
+        /// <returns></returns>
         public List<APIBrand> GetAllBrandNames()
         {
            
             return _Brandrepo.GetAll().Select(b => new APIBrand{
                 Id=b.Id,
-                Name= b.BrandName 
-            
+                Name= b.BrandName             
             }).ToList();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>a brand with its account properties</returns>
         public Brand GetSingleBrand(int id)
         {
             var brand = _Brandrepo.GetById(id).Select(b=>new Brand
@@ -114,6 +138,7 @@ namespace TestJunior.Services
         {
             Brand brand = brandModel.brand;
             brand.Account.AccountType = 2;
+
             if(brandModel.prodCategories.Count > 0)
             {
                 List<ProductCategories> categories = new List<ProductCategories>();

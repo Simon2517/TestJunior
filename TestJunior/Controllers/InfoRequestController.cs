@@ -8,7 +8,7 @@ namespace TestJunior.Controllers
 {
         [ApiController]
         [Route("[controller]")] 
-    public class InfoRequestController : ControllerBase
+    public class InfoRequestController : Controller
     {
 
         private readonly IRequestServices _inforequestServices;

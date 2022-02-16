@@ -5,17 +5,20 @@ export default {
   getProducts(pageNumber, pageSize, orderProperty, asc, brandFilter) {
     return Repository.get(
       `https://localhost:44355${resource}/products/${pageNumber}/${pageSize}/${orderProperty}/${asc}/${brandFilter}`
-    )
-    .then((response) => response.data);
+    ).then((response) => response.data);
   },
 
   getProductDetail(id) {
-    return Repository.get(`${resource}/detail/${id}`)
-    .then((response) => response.data);
+    return Repository.get(`${resource}/detail/${id}`).then(
+      (response) => response.data
+    );
   },
 
   addProduct(product) {
-    return Repository.post(`https://localhost:44355${resource}/new`, product);
+    return Repository.post(
+      `https://localhost:44355${resource}/new`,
+      product
+    ).then((response) => response.data);
   },
   getProductById(id) {
     if (id != null)

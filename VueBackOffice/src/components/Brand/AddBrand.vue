@@ -76,9 +76,10 @@
             <input
               placeholder="Product Name"
               class="form-control"
-              maxlength="200"
+              min="0"
               type="text"
               v-model="item.Product.Name"
+              required
             />
           </div>
           <div class="mb-3">
@@ -88,24 +89,23 @@
               class="form-control"
               type="number"
               v-model.number="item.Product.Price"
+              required
             />
           </div>
           <div class="row m-0">
-
-          
-          <div
-            class="col-3 form-check"
-            v-for="cat in Categories"
-            :key="cat.id"
-          >
-            <input
-              class="form-check-input me-1"
-              type="checkbox"
-              :value="cat.id"
-              v-model="item.categoriesSelected"
-            />
-            <label>{{ cat.name }}</label>
-          </div>
+            <div
+              class="col-3 form-check"
+              v-for="cat in Categories"
+              :key="cat.id"
+            >
+              <input
+                class="form-check-input me-1"
+                type="checkbox"
+                :value="cat.id"
+                v-model="item.categoriesSelected"
+              />
+              <label>{{ cat.name }}</label>
+            </div>
           </div>
         </div>
         <div class="text-center my-5">
@@ -124,6 +124,7 @@ export default {
   name: "CreatePost",
   data() {
     return {
+      Errors: [],
       BrandId: null,
       Categories: null,
       formData: {
@@ -135,12 +136,15 @@ export default {
   },
   methods: {
     async createPost() {
-      let brand = {
-        brand: this.formData,
-        prodCategories: this.formData.Products,
-      };
-      this.BrandId = await BrandRepo.addBrand(brand);
-      this.$router.push({ path: "detail/" + this.BrandId });
+      if (!isNullOrWhiteSpaces(this.formData.BrandName)) {
+        let brand = {
+          brand: this.formData,
+          prodCategories: this.formData.Products,
+        };
+        this.BrandId = await BrandRepo.addBrand(brand);
+        if (this.BrandId != 0)
+          this.$router.push({ path: "detail/" + this.BrandId });
+      }
     },
     addProduct() {
       this.formData.Products.push({
@@ -148,11 +152,16 @@ export default {
         categoriesSelected: [],
       });
     },
+    checkForm: function () {},
   },
   async created() {
     this.Categories = await CatRepo.getCategories();
   },
 };
+
+function isNullOrWhiteSpaces(str) {
+  return str === null || str.match(/^ *$/) !== null;
+}
 </script>
 
 <style scoped>
