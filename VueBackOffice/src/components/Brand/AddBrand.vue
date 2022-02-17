@@ -2,6 +2,15 @@
   <div>
     <div class="col-8 offset-2">
       <div class="fs-3 my-5">Aggiungi Brand</div>
+      <div
+        v-show="Errors !== null"
+        v-for="(item, index) in Errors"
+        :key="index"
+      >
+        <div v-for="err in item" :key="err">
+          <span class="badge bg-danger">{{ err }}</span>
+        </div>
+      </div>
       <form @submit.prevent="createPost()" class="text-start form-group">
         <div class="mb-3">
           <input
@@ -10,6 +19,7 @@
             class="form-control"
             type="text"
             v-model="formData.BrandName"
+            required
           />
         </div>
         <div class="mb-3">
@@ -29,6 +39,7 @@
             maxlength="200"
             type="email"
             v-model="formData.Account.Email"
+            required
           />
         </div>
         <div class="mb-3">
@@ -39,6 +50,7 @@
             class="form-control"
             type="password"
             v-model="formData.Account.Password"
+            required
           />
         </div>
         <div class="d-table w-100 mb-2">
@@ -72,7 +84,7 @@
               </button>
             </div>
           </div>
-          <div class="mb-2">
+          <!-- <div class="mb-2">
             <input
               placeholder="Product Name"
               class="form-control"
@@ -106,7 +118,11 @@
               />
               <label>{{ cat.name }}</label>
             </div>
-          </div>
+          </div> -->
+          <formProduct
+            :formData.sync="item.Product"
+            :ProdsCategories.sync="item.categoriesSelected"
+          />
         </div>
         <div class="text-center my-5">
           <button class="btn btn-primary">create post</button>
@@ -118,18 +134,20 @@
 
 <script>
 import { RepositoryFactory } from "../../services/repositoryFactory";
+import formProduct from "../Product/formProduct.vue";
 const CatRepo = RepositoryFactory.get("categories");
 const BrandRepo = RepositoryFactory.get("brands");
 export default {
   name: "CreatePost",
+  components: { formProduct },
   data() {
     return {
-      Errors: [],
+      Errors: null,
       BrandId: null,
       Categories: null,
       formData: {
         BrandName: "",
-        Account: { Email: "", Password: "" },
+        Account: { Email: "", Password: "", Description: "" },
         Products: [],
       },
     };
@@ -141,14 +159,23 @@ export default {
           brand: this.formData,
           prodCategories: this.formData.Products,
         };
-        this.BrandId = await BrandRepo.addBrand(brand);
-        if (this.BrandId != 0)
+        await BrandRepo.addBrand(brand)
+          .then((response) => {
+            this.BrandId = response.data;
+          })
+          .catch((error) => {
+            // error.response can be null
+            if (error.response && error.response.status === 400) {
+              this.Errors = error.response.data;
+            }
+          });
+        if (this.BrandId != 0 && this.BrandId != undefined)
           this.$router.push({ path: "detail/" + this.BrandId });
       }
     },
     addProduct() {
       this.formData.Products.push({
-        Product: { Name: "", Price: 0 },
+        Product: { Name: "", Price: 0, Description: "", ShortDescription: "" },
         categoriesSelected: [],
       });
     },

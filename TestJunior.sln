@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestJunior", "TestJunior\Te
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "vuebackoffice", "VueBackOffice\vuebackoffice.esproj", "{940FA9AB-D1F9-4894-A292-0D4C28B5E3F1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "DataLayer\DataLayer.csproj", "{5D5F0677-842A-49BC-9433-5070E5A20ED1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessUnit", "BusinessUnit\BusinessUnit.csproj", "{CD97C135-0991-4918-BC7B-AA8C1B80C3E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +27,14 @@ Global
 		{940FA9AB-D1F9-4894-A292-0D4C28B5E3F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{940FA9AB-D1F9-4894-A292-0D4C28B5E3F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{940FA9AB-D1F9-4894-A292-0D4C28B5E3F1}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{5D5F0677-842A-49BC-9433-5070E5A20ED1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D5F0677-842A-49BC-9433-5070E5A20ED1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D5F0677-842A-49BC-9433-5070E5A20ED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D5F0677-842A-49BC-9433-5070E5A20ED1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD97C135-0991-4918-BC7B-AA8C1B80C3E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD97C135-0991-4918-BC7B-AA8C1B80C3E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD97C135-0991-4918-BC7B-AA8C1B80C3E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD97C135-0991-4918-BC7B-AA8C1B80C3E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

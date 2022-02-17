@@ -13,8 +13,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using TestJunior.Repository;
-using TestJunior.Services;
+using DataLayer.Repository;
+using DataLayer;
+using BusinessUnit.Services.Interfaces;
+using BusinessUnit.Services;
 
 namespace TestJunior
 {
@@ -51,7 +53,8 @@ namespace TestJunior
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<IRepository<InfoRequest>, InfoRequestRepository>();
             services.AddScoped<IRequestServices, RequestServices>();
-            services.AddDbContextPool<DatabaseContext>(optionsBuilder => {
+            services.AddDbContextPool<DatabaseContext>(optionsBuilder =>
+            {
                 string ConnectionString = Configuration.GetConnectionString("Default");
                 optionsBuilder.UseSqlServer(ConnectionString);
             });

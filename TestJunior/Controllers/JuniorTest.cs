@@ -5,10 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TestJunior;
-using TestJunior.DetailedEntities;
+using DataLayer.DetailedEntities;
+using BusinessUnit.Services;
+using BusinessUnit.ViewModels;
 
-namespace TestJunior.Controllers
+namespace DataLayer.Controllers
 {
     [ApiController]
     [Route("[controller]")]

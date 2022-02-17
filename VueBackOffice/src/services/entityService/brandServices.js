@@ -21,8 +21,12 @@ export default {
   addBrand(brand) {
     return Repository.post(
       `https://localhost:44355${resource}/new`,
-      brand
-    ).then((response) => response.data);
+      brand)
+    // ).then((response) => response.data,response=>{
+    //   if(response.status==400){
+    //     console.log('hello');
+    //   }
+    // });
   },
   getBrandById(id) {
     return Repository.get(`https://localhost:44355${resource}/${id}`).then(

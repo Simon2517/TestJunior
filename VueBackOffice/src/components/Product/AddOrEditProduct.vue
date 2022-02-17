@@ -1,9 +1,10 @@
 <template>
   <div>
     <div class="col-8 offset-2">
-      <div class="fs-3 my-5">Aggiungi Prodotto</div>
+      <div v-if="formData.productId===0" class="fs-3 my-5">Aggiungi Prodotto</div>
+      <div v-else class="fs-3 my-5">Modifica Prodotto</div>
       <form @submit.prevent="createPost()" class="text-start form-group">
-        <div class="mb-3">
+        <!-- <div class="mb-3">
           <input
             placeholder="Product Name"
             class="form-control"
@@ -57,7 +58,14 @@
         </div>
         <div class="text-center">
           <button class="btn btn-primary mt-4">create post</button>
-        </div>
+        </div>-->
+
+        <formProduct
+          :formData.sync="formData"
+          :ProdsCategories.sync="ProdsCategories"    
+              
+        />
+             <button class="btn btn-primary mt-4">create post</button>
       </form>
     </div>
   </div>
@@ -65,24 +73,26 @@
 
 <script>
 import { RepositoryFactory } from "../../services/repositoryFactory";
-const CatRepo = RepositoryFactory.get("categories");
-const BrandRepo = RepositoryFactory.get("brands");
+import formProduct from "./formProduct.vue";
+// const CatRepo = RepositoryFactory.get("categories");
+// const BrandRepo = RepositoryFactory.get("brands");
 const ProductRepo = RepositoryFactory.get("products");
+// import formProduct from "../Product/formProduct.vue";
 export default {
+  components: { formProduct },
   name: "CreatePost",
   data() {
     return {
       info: null,
-      ProductId: null,
-      Categories: null,
       formData: {
-        Name: "",
-        Price: 0,
-        BrandId: "",
-        ProductId: 0,
+        name: "",
+        price: 0,
+        brandId: "",
+        productId: 0,
+        description:"",
+        shortDescription:""
       },
       ProdsCategories: [],
-      ListofBrands: null,
     };
   },
   methods: {
@@ -91,44 +101,31 @@ export default {
         Product: this.formData,
         categoriesSelected: this.ProdsCategories,
       };
-      if (this.info == null) {
-        this.formData.ProductId = await ProductRepo.addProduct(product);
-        console.log(this.formData.ProductId);
-          this.$router.push({ path: "detail/" + this.formData.ProductId });
-
-      } else {
-        var id = await ProductRepo.updateProduct(product);
+      if (this.formData.productId == 0) {
+        this.formData.productId = await ProductRepo.addProduct(product);
+        this.$router.push({ path: "detail/" + this.formData.productId });
+      } 
+      else {
+        console.log(this.formData.productId);
+        let id= await ProductRepo.updateProduct(product);
         if (id != 0)
           this.$router.replace({
             name: "productDetail",
-            params: { id: this.formData.ProductId },
+            params: { id: this.formData.productId },
           });
       }
     },
   },
   async created() {
-    this.Categories = await CatRepo.getCategories();
-    this.ListofBrands = await BrandRepo.getBrandsName();
+    // this.Categories = await CatRepo.getCategories();
+    // this.ListofBrands = await BrandRepo.getBrandsName();
     this.info = await ProductRepo.getProductById(this.$route.params.id);
     if (this.info != null) {
-      this.formData.Name = this.info.product.name;
-      this.formData.Price = this.info.product.price;
-      this.formData.BrandId = this.info.product.brandId;
-      this.formData.ProductId = this.info.product.productId;
-      this.ProdsCategories = this.info.categoriesSelected;
+      this.formData=this.info.product
+       this.ProdsCategories = this.info.categoriesSelected;
     }
   },
 };
 </script>
 
-<style scoped>
-textarea {
-  resize: none;
-}
-.form-control {
-  background: lightgray;
-}
-input[type="checkbox"] {
-  box-shadow: inset 0 2px 5px #ddd;
-}
-</style>
+

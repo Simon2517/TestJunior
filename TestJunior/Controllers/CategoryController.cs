@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using TestJunior.DetailedEntities;
-using TestJunior.Repository;
-using TestJunior.Services;
+using DataLayer.DetailedEntities;
+using DataLayer.Repository;
+using BusinessUnit.Services.Interfaces;
 
 namespace TestJunior.Controllers
 {

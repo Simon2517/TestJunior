@@ -2,15 +2,16 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
-using TestJunior.DetailedEntities;
-using TestJunior.Repository;
-using TestJunior.Services;
+using DataLayer.DetailedEntities;
+using DataLayer.Repository;
+using DataLayer;
+using BusinessUnit.Services.Interfaces;
 
 namespace TestJunior.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BrandController : Controller
+    public class BrandController : ValidationController
     {
 
         private readonly IBrandServices _brandServices;
@@ -28,7 +29,7 @@ namespace TestJunior.Controllers
         [HttpGet("{id}")]
         public IActionResult GetBrandById(int id)
         {
-            if(id > 0)
+            if (id > 0)
                 return Ok(_brandServices.GetSingleBrand(id));
             else
                 return BadRequest("error");
@@ -43,7 +44,7 @@ namespace TestJunior.Controllers
         /// A Bad request if either pagenumber or pagesize are 0 or below
         /// A paginated list of Brands if the input parameters are valid</returns>
         [HttpGet("brands/{pagenumber}/{pagesize}/{search?}")]
-        public IActionResult GetAllPAginatedBrands(int pagenumber = 1, int pagesize = 10, string search="")
+        public IActionResult GetAllPAginatedBrands(int pagenumber = 1, int pagesize = 10, string search = "")
         {
 
             if (pagenumber <= 0)
@@ -97,7 +98,7 @@ namespace TestJunior.Controllers
         {
             if (brand == null)
                 return BadRequest("error");
-            
+
             return Ok(_brandServices.UpdateBrand(brand));
 
         }
@@ -114,10 +115,14 @@ namespace TestJunior.Controllers
         [HttpPost("new")]
         public IActionResult AddBrand(BrandViewModel brandModel)
         {
-            if (_brandServices.AddBrand(brandModel) != 0)
-                return Ok(brandModel.brand.Id);
+
+            BrandValidation(brandModel);
+            if (!_brandServices.isEmailValid(brandModel.brand.Account.Email))
+                ModelState.AddModelError("brand.account.email", "Email already exists");
+            if (ModelState.IsValid)
+                return Ok(_brandServices.AddBrand(brandModel));
             else
-                return BadRequest("Error in insert");
+                return BadRequest(ModelState);
         }
 
 

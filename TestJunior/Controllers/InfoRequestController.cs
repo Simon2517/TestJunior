@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using TestJunior.DetailedEntities;
-using TestJunior.Repository;
-using TestJunior.Services;
+using DataLayer.DetailedEntities;
+using DataLayer.Repository;
+using BusinessUnit.Services.Interfaces;
 
 namespace TestJunior.Controllers
 {
-        [ApiController]
-        [Route("[controller]")] 
+    [ApiController]
+    [Route("[controller]")]
     public class InfoRequestController : Controller
     {
 
@@ -26,14 +26,14 @@ namespace TestJunior.Controllers
         /// A Bad request if either pagenumber or pagesize are 0 or below
         /// A paginated list of Brands if the input parameters are valid</returns>
         [HttpGet("requests/{pagenumber}/{pagesize}/{asc_desc}/{brandId}/{productId}/{search?}")]
-        public IActionResult GetAllPaginatedRequests(int pagenumber=1,int pagesize=10,bool asc_desc=false,int brandId=0, int productId=0, string search="")
+        public IActionResult GetAllPaginatedRequests(int pagenumber = 1, int pagesize = 10, bool asc_desc = false, int brandId = 0, int productId = 0, string search = "")
         {
 
             if (pagenumber <= 0)
                 return BadRequest("pagenumber is 0 or negative");
-            if(pagesize <= 0)
+            if (pagesize <= 0)
                 return BadRequest("pagesize is 0 or negative");
-            return Ok(_inforequestServices.ListOfRequest(pagenumber, pagesize, asc_desc, brandId,productId, search));
+            return Ok(_inforequestServices.ListOfRequest(pagenumber, pagesize, asc_desc, brandId, productId, search));
 
         }
 

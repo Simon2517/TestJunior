@@ -102,15 +102,16 @@
         >
           <td class="w-25 align-middle">{{ item.brandName }}</td>
           <td class="w-25 align-middle">
-            <span>{{ item.name }}</span
-            ><span class="text-primary">{{ item.shortDescription }}</span>
+            <span class="fw-bold">{{ item.name }}</span
+            ><span class="">|{{ item.shortDescription }}</span>
           </td>
           <td class="text-start w-25 align-middle">
             <span
               class="badge bg-primary ms-2"
               v-for="(cat, i) in info.listOfElements[index].categories"
               :key="i"
-              >{{ cat }}</span
+              :title="cat"
+              >{{ cat.substring(0,20) }}</span
             >
           </td>
           <td class="align-middle text-center">{{ item.price }}€</td>
@@ -125,6 +126,7 @@
             </button>
             <button
               class="btn btn-outline-secondary px-2 py-1"
+              data-bs-toggle="Toast"
               @click.stop="deleteItem(item.id, item.name)"
             >
               <i class="bi bi-trash3-fill"></i>
@@ -148,7 +150,7 @@
       v-show="deletedProduct !== ''"
     >
       <div
-        class="toast d-block"
+        class="toast"
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
@@ -166,6 +168,19 @@
         <div class="toast-body">product {{ deletedProduct }} deleted successfully</div>
       </div>
     </div>
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      
+      <strong class="me-auto">Bootstrap</strong>
+      <small>11 mins ago</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      Hello, world! This is a toast message.
+    </div>
+  </div>
+</div>
   </div>
 </template>
 
@@ -174,9 +189,11 @@ import { RepositoryFactory } from "../../services/repositoryFactory";
 const ProductRepo = RepositoryFactory.get("products");
 const BrandRepo = RepositoryFactory.get("brands");
 import Paging from "../Generics/paging.vue";
+// import Toast from "../Generics/Toast.vue"
 export default {
   components: {
     Paging,
+    // Toast
   },
   data() {
     return {
@@ -211,7 +228,6 @@ export default {
       );
     },
     async deleteItem(id, name) {
-      console.log(name);
       if (confirm("item will be deleted")) {
         this.deletedProduct = name;
         await ProductRepo.deleteProduct(id);
@@ -257,6 +273,9 @@ a {
   width: 10%;
   position: inherit;
   display: table-cell;
+}
+.badge{
+  border-radius: 0.75rem;
 }
 
 

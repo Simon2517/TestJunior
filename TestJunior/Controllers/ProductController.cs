@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TestJunior.DetailedEntities;
-using TestJunior.Repository;
-using TestJunior.Services;
+using DataLayer.DetailedEntities;
+using DataLayer.Repository;
+using BusinessUnit.Services.Interfaces;
 
 namespace TestJunior.Controllers
 {
-        [ApiController]
-        [Route("[controller]")] 
-    public class ProductController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    public class ProductController : ValidationController
     {
 
         private readonly IProductServices _productServices;
@@ -45,10 +45,11 @@ namespace TestJunior.Controllers
         [HttpPost("new")]
         public IActionResult AddProduct(APIProductWithCategories productModel)
         {
-            if (_productServices.AddProduct(productModel) != 0)
-                return Ok(productModel.Product.ProductId);
+            ProductValidation(productModel);
+            if(ModelState.IsValid && _productServices.AddProduct(productModel) != 0)
+                    return Ok(productModel.Product.ProductId);
             else
-                return BadRequest("Error during insert");
+                return BadRequest(ModelState);
         }
 
         /// <summary>
@@ -78,14 +79,14 @@ namespace TestJunior.Controllers
         /// A Bad request if either pagenumber or pagesize are 0 or below
         /// A paginated list of Brands if the input parameters are valid</returns>
         [HttpGet("products/{pagenumber}/{pagesize}/{order}/{asc_desc}/{brandname?}")]
-        public IActionResult GetAllPaginatedProducts(int pagenumber=1, int pagesize=10,int order=0,bool asc_desc=true,string brandName="")
+        public IActionResult GetAllPaginatedProducts(int pagenumber = 1, int pagesize = 10, int order = 0, bool asc_desc = true, string brandName = "")
         {
 
             if (pagenumber <= 0)
                 return BadRequest("pagenumber is 0 or negative");
-            if(pagesize <= 0)
+            if (pagesize <= 0)
                 return BadRequest("pagesize is 0 or negative");
-            return Ok(_productServices.ListOfProducts(pagenumber, pagesize,order,asc_desc,brandName));
+            return Ok(_productServices.ListOfProducts(pagenumber, pagesize, order, asc_desc, brandName));
 
         }
 
@@ -121,8 +122,8 @@ namespace TestJunior.Controllers
         {
             if (id <= 0)
                 return BadRequest("Id can't be 0 or negative");
-            if(await _productServices.DeleteProductAsync(id)==1)
-                return Ok("item deleted successfully");
+            if (await _productServices.DeleteProductAsync(id) == 1)
+                return Ok("item deleted");
             else
                 return NotFound("item not found");
         }
