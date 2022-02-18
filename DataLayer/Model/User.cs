@@ -16,6 +16,6 @@ namespace DataLayer
         /// property that represents the foreign key between User and Account
         public  Account Account { get; set; }
         /// property that represents the foreign key between User and InfoRequest
-        public IEnumerable<InfoRequest>InfoRequests { get; set; }=new List<InfoRequest>();
+        public ICollection<InfoRequest>InfoRequests { get; set; }=new List<InfoRequest>();
     }
 }

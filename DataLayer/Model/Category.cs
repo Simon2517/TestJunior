@@ -12,7 +12,7 @@ namespace DataLayer
         public bool isDeleted { get; set; }
         public string Name { get; set; }
         /// property that represents the foreign key between ProductCategories and Category
-        public  IEnumerable<ProductCategories> ProdsCategories { get; set; } = new List<ProductCategories>();
+        public  ICollection<ProductCategories> ProdsCategories { get; set; } = new List<ProductCategories>();
 
     }
 }

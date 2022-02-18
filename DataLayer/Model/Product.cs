@@ -21,7 +21,7 @@ namespace DataLayer
         /// property that represents the foreign key between ProductCategories and Product
         public ICollection<ProductCategories> ProdsCategories { get; set; }=new List<ProductCategories>();
         /// property that represents the foreign key between InfoRequests and Product
-        public IEnumerable<InfoRequest> InfoRequests { get; set; }= new List<InfoRequest>();
+        public ICollection<InfoRequest> InfoRequests { get; set; }= new List<InfoRequest>();
 
     }
 }

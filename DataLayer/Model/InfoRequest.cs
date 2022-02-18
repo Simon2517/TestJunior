@@ -30,7 +30,7 @@ namespace DataLayer
         /// property that represents the foreign key between User and InfoRequest
         public  User User { get; set; }
         /// property that represents the foreign key between InfoRequestReply and InfoRequest
-        public  IEnumerable<InfoRequestReply> InfoRequestReplies { get; set; } = new List<InfoRequestReply>();
+        public  ICollection<InfoRequestReply> InfoRequestReplies { get; set; } = new List<InfoRequestReply>();
 
     }
 }

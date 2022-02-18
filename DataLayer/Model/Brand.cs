@@ -17,7 +17,7 @@ namespace DataLayer
         /// property that represents the foreign key between Account and Brand
         public  Account Account { get;  set; }
         /// property that represents the foreign key between Products and Brand
-        public  IEnumerable<Product> Products { get;  set; }=new List<Product>();
+        public  ICollection<Product> Products { get;  set; }=new List<Product>();
 
 
     }
