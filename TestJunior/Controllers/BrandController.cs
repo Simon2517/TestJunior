@@ -140,7 +140,7 @@ namespace TestJunior.Controllers
         {
             if (id <= 0)
                 return BadRequest("Id can't be 0 or negative");
-            if (await _brandServices.DeleteBrandAsync(id) == 1)
+            if (await _brandServices.DeleteBrandAsync(id) != 0)
                 return Ok("item deleted successfully");
             else
                 return NotFound("item not found");

@@ -64,11 +64,6 @@ namespace DataLayer.Repository
         }
         public int add(Brand brand)
         {
-            //var x = new Product
-            //{
-            //    Name = null,
-            //};
-            //brand.Products.Append(x);
             _ctx.Brand.Add(brand);
             _ctx.SaveChanges();
             return brand.Id;

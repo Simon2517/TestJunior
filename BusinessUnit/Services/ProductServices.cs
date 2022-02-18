@@ -38,7 +38,7 @@ namespace BusinessUnit.Services
         /// an order and filtered list if brandName is not empty
         /// otherwise an ordered list
         /// </returns>
-        public IQueryable<Product> OrderedProducts(int order = 0, bool asc_desc = true, string brandName = "")
+        public IQueryable<Product> OrderedProducts(OrderProperty order = OrderProperty.Default, bool asc_desc = true, string brandName = "")
         {
             IQueryable<Product> prods;
             if (string.IsNullOrEmpty(brandName))
@@ -47,17 +47,17 @@ namespace BusinessUnit.Services
                 prods = FilterProducts(brandName);
             switch (order)
             {
-                case 1:
+                case OrderProperty.Brand:
                     if (asc_desc)
                         return prods.OrderBy(x => x.Brand.BrandName);
                     else
                         return prods.OrderByDescending(x => x.Brand.BrandName);
-                case 2:
+                case OrderProperty.Prodotto:
                     if (asc_desc)
                         return prods.OrderBy(x => x.Name);
                     else
                         return prods.OrderByDescending(x => x.Name);
-                case 3:
+                case OrderProperty.Prezzo:
                     if (asc_desc)
                         return prods.OrderBy(x => x.Price);
                     else
@@ -81,7 +81,7 @@ namespace BusinessUnit.Services
         /// <param name="asc_desc">the ascendant and descendant option of the order</param>
         /// <param name="brandName">the name of the brand used to filter the list of products</param>
         /// <returns>a paginated list</returns>
-        public PaginatedList<PaginatedProduct> ListOfProducts(int pagenumber, int pagesize, int order, bool asc_desc, string brandName)
+        public PaginatedList<PaginatedProduct> ListOfProducts(int pagenumber, int pagesize, OrderProperty order, bool asc_desc, string brandName)
         {
             if (pagenumber <= 0 || pagesize <= 0)
                 return null;

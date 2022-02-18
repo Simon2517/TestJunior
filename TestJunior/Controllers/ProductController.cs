@@ -79,7 +79,7 @@ namespace TestJunior.Controllers
         /// A Bad request if either pagenumber or pagesize are 0 or below
         /// A paginated list of Brands if the input parameters are valid</returns>
         [HttpGet("products/{pagenumber}/{pagesize}/{order}/{asc_desc}/{brandname?}")]
-        public IActionResult GetAllPaginatedProducts(int pagenumber = 1, int pagesize = 10, int order = 0, bool asc_desc = true, string brandName = "")
+        public IActionResult GetAllPaginatedProducts(int pagenumber = 1, int pagesize = 10, OrderProperty order = OrderProperty.Default, bool asc_desc = true, string brandName = "")
         {
 
             if (pagenumber <= 0)

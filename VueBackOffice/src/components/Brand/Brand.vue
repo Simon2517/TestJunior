@@ -1,5 +1,5 @@
 <template>
-  <div v-if="info !== null" class="mt-5">
+  <div v-if="info !== null" class="mt-3">
     <div class="d-table w-100 mb-3">
       <div class="d-table-cell align-bottom">
         <span class="fs-2">Brands </span>
@@ -51,10 +51,10 @@
               <i class="bi bi-pencil-square"></i>
             </button>
             <button
-              class="btn btn-outline-secondary px-2 py-1"
-              @click.stop="deleteItem(item.id)"
+              class="btn btn-outline-secondary px-2 py-1 text-danger"
+              @click.stop="deleteItem(item.id, item.name)"
             >
-              <i class="bi bi-trash3-fill"></i>
+              <i class="bi bi-trash"></i>
             </button>
           </td>
         </tr>
@@ -68,6 +68,35 @@
       v-on:previous="previous"
       v-on:selectedIndex="selectedIndex"
     />
+
+    <div
+      class="position-fixed bottom-0 end-0 p-3"
+      style="z-index: 11"
+      v-show="deletedBrand !== ''"
+    >
+      <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div
+          id="liveToast"
+          class="toast"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div class="toast-header">
+            <strong class="me-auto">Success</strong>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="toast-body">
+            Brand {{ deletedBrand }} has been deleted
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -75,6 +104,7 @@
 import Paging from "../Generics/paging.vue";
 import { RepositoryFactory } from "../../services/repositoryFactory";
 import brandServices from "../../services/entityService/brandServices";
+import {Toast} from "bootstrap/dist/js/bootstrap.esm.js"
 const BrandRepo = RepositoryFactory.get("brands");
 export default {
   components: {
@@ -86,6 +116,7 @@ export default {
       pageNumber: 1,
       pageSize: 10,
       brandName: "",
+      deletedBrand: "",
     };
   },
   methods: {
@@ -96,9 +127,14 @@ export default {
         this.brandName
       );
     },
-    async deleteItem(id) {
-      await brandServices.deleteBrand(id);
-      await this.load();
+    async deleteItem(id, name) {
+      if (confirm("item will be deleted")) {
+        var toast = new Toast(document.getElementById("liveToast"));
+        toast.show();
+        this.deletedBrand = name;
+        await brandServices.deleteBrand(id);
+        await this.load();
+      }
     },
     async next() {
       if (this.pageNumber < this.info.totalPages) this.pageNumber++;

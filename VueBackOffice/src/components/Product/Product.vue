@@ -1,5 +1,5 @@
 <template>
-  <div v-if="info !== null" class="mt-5">
+  <div v-if="info !== null" class="mt-3">
     <div class="d-table w-100">
       <div class="d-table-cell align-bottom">
         <span class="fs-2">Prodotti </span>
@@ -22,15 +22,21 @@
           <th scope="col">
             <tr>
               <td class="w-100 text-start">Nome Brand</td>
-              <td @click="orderby(1)">
+              <td @click="orderby(orderbyoptions.brandName)">
                 <i
-                  v-if="this.asc === true && this.orderProperty <= 1"
+                  v-if="
+                    this.asc === true &&
+                    this.orderProperty <= orderbyoptions.brandName
+                  "
                   class="bi bi-caret-up-fill d-flex"
                 ></i>
                 <i v-else class="bi bi-caret-up-fill d-flex notselected"></i>
 
                 <i
-                  v-if="this.asc === false && this.orderProperty === 1"
+                  v-if="
+                    this.asc === false &&
+                    this.orderProperty === orderbyoptions.brandName
+                  "
                   class="bi bi-caret-down-fill d-flex"
                 ></i>
                 <i v-else class="bi bi-caret-down-fill d-flex notselected"></i>
@@ -40,15 +46,21 @@
           <th scope="col">
             <tr>
               <td class="w-100 text-start text-center">Nome Prodotto</td>
-              <td @click="orderby(2)">
+              <td @click="orderby(orderbyoptions.productName)">
                 <i
-                  v-if="this.asc === true && this.orderProperty === 2"
+                  v-if="
+                    this.asc === true &&
+                    this.orderProperty === orderbyoptions.productName
+                  "
                   class="bi bi-caret-up-fill d-flex"
                 ></i>
                 <i v-else class="bi bi-caret-up-fill d-flex notselected"></i>
 
                 <i
-                  v-if="this.asc === false && this.orderProperty === 2"
+                  v-if="
+                    this.asc === false &&
+                    this.orderProperty === orderbyoptions.productName
+                  "
                   class="bi bi-caret-down-fill d-flex"
                 ></i>
                 <i v-else class="bi bi-caret-down-fill d-flex notselected"></i>
@@ -59,16 +71,22 @@
           <th scope="col">
             <tr>
               <td class="w-100 text-center">Prezzo</td>
-              <td @click="orderby(3)">
+              <td @click="orderby(orderbyoptions.price)">
                 <i
-                  v-if="this.asc === true && this.orderProperty === 3"
+                  v-if="
+                    this.asc === true &&
+                    this.orderProperty === orderbyoptions.price
+                  "
                   class="bi bi-caret-up-fill d-flex"
                 >
                 </i>
                 <i v-else class="bi bi-caret-up-fill d-flex notselected"> </i>
 
                 <i
-                  v-if="this.asc === false && this.orderProperty === 3"
+                  v-if="
+                    this.asc === false &&
+                    this.orderProperty === orderbyoptions.price
+                  "
                   class="bi bi-caret-down-fill d-flex"
                 ></i>
                 <i v-else class="bi bi-caret-down-fill d-flex notselected"> </i>
@@ -111,7 +129,7 @@
               v-for="(cat, i) in info.listOfElements[index].categories"
               :key="i"
               :title="cat"
-              >{{ cat.substring(0,20) }}</span
+              >{{ cat.substring(0, 20) }}</span
             >
           </td>
           <td class="align-middle text-center">{{ item.price }}€</td>
@@ -127,9 +145,9 @@
             <button
               class="btn btn-outline-secondary px-2 py-1"
               data-bs-toggle="Toast"
-              @click.stop="deleteItem(item.id, item.name)"
+              @click.stop="showDeleteToast(item.id, item.name)"
             >
-              <i class="bi bi-trash3-fill"></i>
+              <i class="bi bi-trash"></i>
             </button>
           </td>
         </tr>
@@ -144,43 +162,38 @@
       v-on:previous="previous"
       v-on:selectedIndex="selectedIndex"
     />
-    <div
+    <!-- <div
       class="position-fixed bottom-0 end-0 p-3"
       style="z-index: 11"
-      v-show="deletedProduct !== ''"
+      v-if="deletedProduct !== ''"
     >
-      <div
-        class="toast"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-      >
-        <div class="toast-header">
-          <strong class="me-auto">Bootstrap</strong>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="toast"
-            aria-label="Close"
-            @click="deletedProduct=''"
-          ></button>
+      <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div
+          id="liveToast"
+          class="toast"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div class="toast-header">
+            <strong class="me-auto">Success</strong>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="toast-body">
+            Product {{ deletedProduct }} has been deleted
+          </div>
         </div>
-        <div class="toast-body">product {{ deletedProduct }} deleted successfully</div>
       </div>
-    </div>
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-  <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="toast-header">
-      
-      <strong class="me-auto">Bootstrap</strong>
-      <small>11 mins ago</small>
-      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-    <div class="toast-body">
-      Hello, world! This is a toast message.
-    </div>
-  </div>
-</div>
+    </div> -->
+    <Toastcomponent
+      :deletedItem="deletedProduct"
+      v-on:deleteItem="deleteItem"
+    />
   </div>
 </template>
 
@@ -189,11 +202,12 @@ import { RepositoryFactory } from "../../services/repositoryFactory";
 const ProductRepo = RepositoryFactory.get("products");
 const BrandRepo = RepositoryFactory.get("brands");
 import Paging from "../Generics/paging.vue";
-// import Toast from "../Generics/Toast.vue"
+import { Toast } from "bootstrap/dist/js/bootstrap.esm.js";
+import Toastcomponent from "../Generics/Toast.vue";
 export default {
   components: {
     Paging,
-    // Toast
+    Toastcomponent,
   },
   data() {
     return {
@@ -205,7 +219,7 @@ export default {
       asc: true,
       ListofBrands: null,
       brandFilter: "",
-      deletedProduct: "",
+      deletedProduct: { id: 0, name: "" },
     };
   },
   computed: {
@@ -215,6 +229,13 @@ export default {
         if (i <= this.pageNumber + 2 && i >= this.pageNumber - 2) pages.push(i);
       }
       return pages;
+    },
+    orderbyoptions() {
+      return {
+        brandName: 1,
+        productName: 2,
+        price: 3,
+      };
     },
   },
   methods: {
@@ -227,12 +248,17 @@ export default {
         this.brandFilter
       );
     },
-    async deleteItem(id, name) {
-      if (confirm("item will be deleted")) {
-        this.deletedProduct = name;
-        await ProductRepo.deleteProduct(id);
-        await this.load();
-      }
+    showDeleteToast(id, name) {
+      var toastModal = new Toast(document.getElementById("toastModal"));
+      toastModal.show();
+      this.deletedProduct.id = id;
+      this.deletedProduct.name = name;
+    },
+    async deleteItem(prod) {
+      var toast = new Toast(document.getElementById("liveToast"));
+      toast.show();
+      await ProductRepo.deleteProduct(prod.id);
+      await this.load();
     },
     async next() {
       if (this.pageNumber < this.info.totalPages) this.pageNumber++;
@@ -274,9 +300,7 @@ a {
   position: inherit;
   display: table-cell;
 }
-.badge{
+.badge {
   border-radius: 0.75rem;
 }
-
-
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="isLoading === true" class="mt-5 text-center">
+    <div v-if="isLoading === true" class="mt-3 text-center">
       <button class="btn btn-primary" type="button" disabled>
         <span
           class="spinner-border spinner-border-sm"
@@ -10,7 +10,7 @@
         Retrieving Data
       </button>
     </div>
-    <div v-if="isLoading === false" class="mt-5">
+    <div v-if="isLoading === false" class="mt-3">
       <div class="fs-2">Leads</div>
       <hr class="m-0 my-1" />
       <table class="table table-striped table-hover">

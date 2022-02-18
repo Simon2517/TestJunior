@@ -84,41 +84,6 @@
               </button>
             </div>
           </div>
-          <!-- <div class="mb-2">
-            <input
-              placeholder="Product Name"
-              class="form-control"
-              min="0"
-              type="text"
-              v-model="item.Product.Name"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label class="form-label" for="Price">Price</label>
-            <input
-              step=".01"
-              class="form-control"
-              type="number"
-              v-model.number="item.Product.Price"
-              required
-            />
-          </div>
-          <div class="row m-0">
-            <div
-              class="col-3 form-check"
-              v-for="cat in Categories"
-              :key="cat.id"
-            >
-              <input
-                class="form-check-input me-1"
-                type="checkbox"
-                :value="cat.id"
-                v-model="item.categoriesSelected"
-              />
-              <label>{{ cat.name }}</label>
-            </div>
-          </div> -->
           <formProduct
             :formData.sync="item.Product"
             :ProdsCategories.sync="item.categoriesSelected"
@@ -164,7 +129,6 @@ export default {
             this.BrandId = response.data;
           })
           .catch((error) => {
-            // error.response can be null
             if (error.response && error.response.status === 400) {
               this.Errors = error.response.data;
             }
@@ -175,7 +139,7 @@ export default {
     },
     addProduct() {
       this.formData.Products.push({
-        Product: { Name: "", Price: 0, Description: "", ShortDescription: "" },
+        Product: { name: "", price: 0, description: "", shortDescription: "" },
         categoriesSelected: [],
       });
     },

@@ -27,4 +27,13 @@ namespace DataLayer.DetailedEntities
         public Product Product { get; set; }
         public List<int> categoriesSelected { get; set; }= new List<int>();
     }
+
+
+    public enum OrderProperty
+    {
+        Default,
+        Brand,
+        Prodotto,
+        Prezzo
+    }
 }

@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <div class="container-fluid">
-      <div class="row bg-dark text-white text-start shadow" >
+      <div class="row bg-dark text-white text-start shadow">
         <div class="col">
-          <h3>Company Name</h3>
+          <h3 class="my-1">Company Name</h3>
         </div>
       </div>
 
@@ -11,10 +11,10 @@
         <div class="col">
           <div class="container-fluid p-0">
             <div class="row">
-              <div class="col-2 bg-light">
+              <div class="col-2 bg-light sticky-top vh-100">
                 <ul
-                  class="nav flex-column bg-light text-start mt-5"
-                  v-bind:class="'view'"
+                  class="nav sticky-top flex-column bg-light text-start mt-3"
+
                 >
                   <li class="nav-item">
                     <router-link to="/brands" class="nav-link"
@@ -72,21 +72,20 @@ export default {
   line-height: 0.75;
   cursor: pointer;
 }
-.detail{
+.detail {
   cursor: pointer;
 }
-.bi-trash3-fill{
-  color:red
-}.bi-pencil-square{
+.bi-trash {
+  color: red;
+}
+.bi-pencil-square {
   color: orange;
 }
-.nav-link{
+.nav-link {
   color: #2c3e50;
 }
 a.router-link-exact-active {
-  font-weight: bold;  
+  font-weight: bold;
   color: blue;
-   
 }
-
 </style>

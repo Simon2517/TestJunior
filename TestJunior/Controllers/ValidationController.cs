@@ -27,7 +27,7 @@ namespace TestJunior.Controllers
             }
             foreach(var product in brandModel.prodCategories)
             {
-                ProductValidation(product);
+                isValid=ProductValidation(product);
             }
             if(brandModel.prodCategories.Select(x=>x.Product.Name).Distinct().Count()!= brandModel.prodCategories.Count)
             {
@@ -44,6 +44,11 @@ namespace TestJunior.Controllers
             {
                 isValid = false;
                 ModelState.AddModelError("product.name", "product name is either null or more than 255 characters");
+            }
+            if (productModel.Product.Price <= 0)
+            {
+                isValid = false;
+                ModelState.AddModelError("product.price", "must insert a price");
             }
             return isValid;
         }

@@ -15,7 +15,6 @@
         class="form-control"
         type="number"
         min="0"
-        max="999999999999999999"
         step=".01"
         v-model.number="productForm.price"
         required
